@@ -1,0 +1,30 @@
+.technology-block {
+  width: 90px;
+  height: 60px;
+  background: #e8e8e8;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: -0.04em;
+  transition: opacity 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.technology-block:hover {
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 1024px) {
+  .technology-block {
+    width: 84px;
+    height: 57px;
+    font-size: 12px;
+    line-height: 15px;
+  }
+}
