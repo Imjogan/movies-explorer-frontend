@@ -23,7 +23,7 @@ const AboutMe = () => {
           <ul className="about-me__links">
             <li className="about-me__item-link">
               <a
-                class="about-me__link"
+                className="about-me__link"
                 target="_blank"
                 href="https://github.com/Imjogan"
                 rel="noreferrer"
@@ -33,7 +33,7 @@ const AboutMe = () => {
             </li>
             <li className="about-me__item-link">
               <a
-                class="about-me__link"
+                className="about-me__link"
                 target="_blank"
                 href="http://linkedin.com/in/mjogan"
                 rel="noreferrer"

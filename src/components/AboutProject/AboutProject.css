@@ -1,5 +1,6 @@
 .about-project {
   padding: 110px 70px;
+  background-color: #fafafa;
 }
 
 .about-project__information {
@@ -142,7 +143,7 @@
     font-size: 18px;
     line-height: 22px;
   }
-  
+
   .about-project__information-text {
     font-size: 11px;
     line-height: 16px;
