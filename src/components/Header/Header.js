@@ -1,16 +1,20 @@
 import './Header.css';
-import Button from '../Button/Button';
 import headerLogo from '../../images/header/logo.svg';
+import Navigation from '../Navigation/Navigation';
+import NavAuth from '../NavAuth/NavAuth';
+import { Link } from 'react-router-dom';
 
-const Header = () => {
+const Header = ({ isLoggedIn, openSideMenu }) => {
   return (
-    <section className="header">
-      <img className="header__logo" src={headerLogo} alt="Логотип сайта" />
+    <header className="header">
+      <Link to="/">
+        <img className="header__logo" src={headerLogo} alt="Логотип сайта" />
+      </Link>
       <nav className="header__menu">
-        <Button type={'button'} name={'Регистрация'} buttonStyle={'default'} />
-        <Button type={'button'} name={'Войти'} buttonStyle={'blue'} />
+        {isLoggedIn && <Navigation />}
+        <NavAuth isLoggedIn={isLoggedIn} openSideMenu={openSideMenu} />
       </nav>
-    </section>
+    </header>
   );
 };
 

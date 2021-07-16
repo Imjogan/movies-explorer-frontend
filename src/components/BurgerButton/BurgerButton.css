@@ -1,0 +1,33 @@
+.burger {
+  display: none;
+}
+
+.burger__line {
+  display: block;
+  width: 28px;
+  height: 3px;
+  margin-bottom: 7px;
+  background-color: #000;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.burger__line:last-of-type {
+  margin-bottom: 0;
+}
+
+.burger__button {
+  display: block;
+  margin: 0;
+  cursor: pointer;
+}
+
+.burger__button:hover .burger__line {
+  opacity: 0.7;
+}
+
+@media screen and (max-width: 768px) {
+  .burger {
+    margin: 0;
+    display: flex;
+  }
+}
