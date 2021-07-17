@@ -1,15 +1,16 @@
 .header {
+  position: relative;
   padding: 0 70px;
+  background-color: #dddee3;
+  justify-items: center;
   min-height: 74px;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: fixed;
-  z-index: 1000;
   top: 0;
   left: 0;
   right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
 }
 
 .header__logo {
@@ -19,9 +20,28 @@
   justify-self: flex-start;
 }
 
+.header__logo-wrapper {
+  flex-basis: 100px;
+}
+
 .header__menu {
-  display: flex;
-  margin: 0;
+    margin: 0;
+    display: flex;
+}
+
+.header__link {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  text-decoration: none;
+  color: #000;
+  margin: auto 0;
+  transition: opacity .3s ease-in-out;
+}
+
+.header__link:hover {
+  opacity: .7;
 }
 
 @media screen and (max-width: 768px) {
@@ -33,5 +53,9 @@
 @media screen and (max-width: 425px) {
   .header {
     padding: 0 14px;
+  }
+
+  .header__link {
+    font-size: 10px;
   }
 }

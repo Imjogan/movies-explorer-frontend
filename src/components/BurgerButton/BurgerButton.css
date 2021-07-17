@@ -1,5 +1,6 @@
 .burger {
-  display: none;
+  display: flex;
+  margin: 0;
 }
 
 .burger__line {
@@ -23,11 +24,4 @@
 
 .burger__button:hover .burger__line {
   opacity: 0.7;
-}
-
-@media screen and (max-width: 768px) {
-  .burger {
-    margin: 0;
-    display: flex;
-  }
 }

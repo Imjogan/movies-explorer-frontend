@@ -1,27 +1,11 @@
-.blackout {
+.side-menu {
   position: fixed;
-  z-index: 2000;
+  z-index: 100;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
-  background-color: #000;
-  opacity: 0.3;
-}
-
-.side-menu {
-  position: fixed;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  min-width: 524px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 25px 25px 90px;
-  background-color: #fafafa;
-  z-index: 3000;
+  background-color: rgba(0, 0, 0, 0.3);
   transform: translateX(100%);
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
@@ -30,12 +14,31 @@
   transform: translateX(0%);
 }
 
+.side-menu__content {
+  box-sizing: border-box;
+  padding: 160px 0 90px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fafafa;
+  z-index: 200;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
 .side-menu__button-close {
-  align-self: flex-end;
+  position: absolute;
+  top: 25px;
+  right: 25px;
   width: 22px;
   height: 22px;
   background-image: url(../../images/cross.svg);
-  background-position: center center;
+  background-position: center;
   background-color: transparent;
   border: 0;
   cursor: pointer;
@@ -43,34 +46,12 @@
 }
 
 .side-menu__button-close:hover {
-  opacity: .7;
+  opacity: 0.7;
 }
 
-.side-menu__account {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-self: flex-end;
-}
-
-.side-menu__account-link {
-  font-style: normal;
-  font-weight: 500;
-  line-height: 16px;
-  text-align: center;
-  transition: opacity 0.3s ease-in-out;
-  cursor: pointer;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #000;
-  background: #f4f4f4;
-  border-radius: 20px;
-  padding: 8px 20px;
-  font-size: 14px;
-}
-
-.side-menu__account-link:hover {
-  opacity: 0.8;
+@media screen and (max-width: 630px) {
+  .side-menu__content {
+    width: 100%;
+    padding: 145px 0 45px;
+  }
 }

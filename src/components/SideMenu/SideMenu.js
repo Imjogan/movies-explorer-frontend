@@ -1,32 +1,20 @@
 import './SideMenu.css';
 import Navigation from '../Navigation/Navigation';
-import { Link } from 'react-router-dom';
+import Button from '../Button/Button';
 
 function SideMenu({ isSideMenu, closeSideMenu }) {
-  const handleClick = () => {
-    closeSideMenu();
-  };
-
   return (
-    <>
-      <section className={`side-menu ${isSideMenu && 'side-menu_opened'}`}>
-        {/* <div className="blackout" /> */}
+    <section className={`side-menu ${isSideMenu && 'side-menu_opened'}`}>
+      <div className="side-menu__content">
         <button
-          onClick={handleClick}
+          onClick={closeSideMenu}
           type="button"
           className="side-menu__button-close"
         />
-        <Navigation />
-        <nav className="side-menu__account">
-          <Link
-            to="/profile"
-            className="side-menu__account-link"
-          >
-            Аккаунт
-          </Link>
-        </nav>
-      </section>
-    </>
+        <Navigation navStyle={'side'} closeSideMenu={closeSideMenu} />
+        <Button type={'account'} text={'Аккаунт'} closeSideMenu={closeSideMenu} />
+      </div>
+    </section>
   );
 }
 

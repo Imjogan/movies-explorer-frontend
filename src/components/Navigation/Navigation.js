@@ -1,26 +1,30 @@
 import './Navigation.css';
 import { NavLink } from 'react-router-dom';
+import { navLinks } from '../../utils/links';
 
-const Navigation = () => {
+const Navigation = ({ navStyle, closeSideMenu }) => {
+
   return (
-    <section className="navigation">
-      <nav className="navigation__routes">
+    <nav className={navStyle === 'side' ? 'side-navigation' : 'navigation'}>
+      {(navStyle === 'side' ? navLinks : navLinks.slice(1)).map((link, i) => (
         <NavLink
-          to="/movies"
-          activeClassName="navigation__link_active"
-          className="navigation__link"
+          exact
+          onClick={closeSideMenu}
+          key={i}
+          to={link[1]}
+          activeClassName={
+            navStyle === 'side'
+              ? 'side-navigation__link_active'
+              : 'navigation__link_active'
+          }
+          className={
+            navStyle === 'side' ? 'side-navigation__link' : 'navigation__link'
+          }
         >
-          Фильмы
+          {link[0]}
         </NavLink>
-        <NavLink
-          to="/saved-movies"
-          activeClassName="navigation__link_active"
-          className="navigation__link"
-        >
-          Сохраненные фильмы
-        </NavLink>
-      </nav>
-    </section>
+      ))}
+    </nav>
   );
 };
 
