@@ -1,7 +1,15 @@
 import './Button.css';
 import { Link } from 'react-router-dom';
 
-const Button = ({ text, type, onClick, disabled, buttonType, closeSideMenu }) => {
+const Button = ({
+  text,
+  type,
+  onClick,
+  disabled,
+  buttonType,
+  closeSideMenu,
+  additionalClass,
+}) => {
   return (
     <>
       {type === 'login' ? (
@@ -9,15 +17,20 @@ const Button = ({ text, type, onClick, disabled, buttonType, closeSideMenu }) =>
           {text}
         </Link>
       ) : type === 'account' ? (
-        <Link onClick={closeSideMenu} className="button button_type_account" to="/profile">
+        <Link
+          onClick={closeSideMenu}
+          className="button button_type_account"
+          to="/profile"
+        >
           {text}
         </Link>
       ) : (
         <button
           className={`
       button
-      ${type === 'login' && 'button_type_login'}
-      ${type === 'account' && 'button_type_account'}
+      ${type === 'save' && `button_type_save ${additionalClass}`}
+      ${type === 'saved' && 'button_type_saved'}
+      ${type === 'delete' && `button_type_delete ${additionalClass}`}
       `}
           type={buttonType || 'button'}
           onClick={onClick}

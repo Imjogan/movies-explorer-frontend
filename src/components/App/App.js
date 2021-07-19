@@ -1,9 +1,10 @@
+import './App.css';
 import Main from '../Main/Main';
-import Footer from '../Footer/Footer';
-import Header from '../Header/Header';
+import Movies from '../Movies/Movies';
 import SideMenu from '../SideMenu/SideMenu';
 import { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { Route, Switch } from 'react-router-dom';
 
 const App = () => {
   //определяем устройство
@@ -40,18 +41,27 @@ const App = () => {
 
   return (
     <section className="app">
-      <Header
-        isTablet={isTablet}
-        isLoggedIn={isLoggedIn}
-        openSideMenu={openSideMenu}
-      />
-      <Main />
-      <Footer />
       <SideMenu
         isLoggedIn={isLoggedIn}
         isSideMenu={isSideMenu}
         closeSideMenu={closeSideMenu}
       />
+      <Switch>
+        <Route exact path="/">
+          <Main
+            isTablet={isTablet}
+            isLoggedIn={isLoggedIn}
+            openSideMenu={openSideMenu}
+          />
+        </Route>
+        <Route path="/movies">
+          <Movies
+            isTablet={isTablet}
+            isLoggedIn={isLoggedIn}
+            openSideMenu={openSideMenu}
+          />
+        </Route>
+      </Switch>
     </section>
   );
 };

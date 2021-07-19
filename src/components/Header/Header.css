@@ -13,6 +13,10 @@
   margin: 0;
 }
 
+.header_theme_white {
+  background-color: #fafafa;
+}
+
 .header__logo {
   object-fit: cover;
   width: 38px;
@@ -25,8 +29,8 @@
 }
 
 .header__menu {
-    margin: 0;
-    display: flex;
+  margin: 0;
+  display: flex;
 }
 
 .header__link {
@@ -37,16 +41,16 @@
   text-decoration: none;
   color: #000;
   margin: auto 0;
-  transition: opacity .3s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .header__link:hover {
-  opacity: .7;
+  opacity: 0.7;
 }
 
 @media screen and (max-width: 768px) {
   .header {
-    padding: 0 50px;
+    padding: 0 30px;
   }
 }
 

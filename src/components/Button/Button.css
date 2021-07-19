@@ -9,6 +9,7 @@
   align-items: center;
   text-align: center;
   text-decoration: none;
+  transition: opacity .3s ease-in-out;
 }
 
 .button:hover {
@@ -39,10 +40,74 @@
   color: #000;
 }
 
+.button_type_save {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 9px;
+  background: #F4F4F4;
+  border-radius: 30px;
+  margin: 0;
+  padding: 6px 7px;
+  color: #000;
+  opacity: 0;
+}
+
+.button_type_saved {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #EE3465;
+  background-image: url(../../images/check.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 30px;
+}
+
+.button_type_delete {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #F4F4F4;
+  border-radius: 30px;
+  background-image: url(../../images/delete.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 21px;
+  height: 21px;
+  opacity: 0;
+}
+
+.button_visible {
+  opacity: 1;
+}
+
 @media screen and (max-width: 425px) {
   .button_type_login {
     margin-left: 14px;
     padding: 5px 12px;
     font-size: 10px;
+  }
+
+  .button_type_save {
+    top: 10px;
+    right: 10px;
+    opacity: 1;
+  }
+  
+  .button_type_saved {
+    top: 10px;
+    right: 10px;
+  }
+  
+  .button_type_delete {
+    top: 10px;
+    right: 10px;
+    opacity: 1;
   }
 }

@@ -5,9 +5,9 @@ import Button from '../Button/Button';
 import BurgerButton from '../BurgerButton/BurgerButton';
 import { Link } from 'react-router-dom';
 
-const Header = ({ isLoggedIn, openSideMenu, isTablet }) => {
+const Header = ({ isLoggedIn, openSideMenu, isTablet, theme }) => {
   return (
-    <header className="header">
+    <header className={`header ${theme === 'white' && 'header_theme_white'}`}>
       <div className="header__logo-wrapper">
         <Link to="/">
           <img className="header__logo" src={headerLogo} alt="Логотип сайта" />
