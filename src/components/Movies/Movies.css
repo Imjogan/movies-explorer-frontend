@@ -1,21 +1,5 @@
 .movies {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-}
-
-.movies-list {
-  padding: 70px 70px 28px;
-  list-style: none;
-  display: grid;
-  justify-content: center;
-  align-content: center;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-template-rows: repeat(auto-fit, 1fr);
-  grid-gap: 58px 30px;
-  font-size: 0;
-}
-
-.movies-list__element {
-  margin: 0 auto;
+  height: 100%;
 }

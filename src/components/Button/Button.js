@@ -31,6 +31,8 @@ const Button = ({
       ${type === 'save' && `button_type_save ${additionalClass}`}
       ${type === 'saved' && 'button_type_saved'}
       ${type === 'delete' && `button_type_delete ${additionalClass}`}
+      ${type === 'more' && 'button_type_more'}
+      ${type === 'search' && 'button_type_search'}
       `}
           type={buttonType || 'button'}
           onClick={onClick}

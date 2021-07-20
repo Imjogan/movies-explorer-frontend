@@ -1,7 +1,9 @@
 import './Movies.css';
-import MoviesCard from '../MoviesCard/MoviesCard';
+import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import Button from '../Button/Button';
+import SearchForm from '../SearchForm/SearchForm';
 
 const Movies = ({ isTablet, isLoggedIn, openSideMenu }) => {
   return (
@@ -12,26 +14,9 @@ const Movies = ({ isTablet, isLoggedIn, openSideMenu }) => {
         openSideMenu={openSideMenu}
         theme={'white'}
       />
-      <ul className="movies-list">
-        <li className="movies-list__element">
-          <MoviesCard />
-        </li>
-        <li className="movies-list__element">
-          <MoviesCard />
-        </li>
-        <li className="movies-list__element">
-          <MoviesCard />
-        </li>
-        <li className="movies-list__element">
-          <MoviesCard />
-        </li>
-        <li className="movies-list__element">
-          <MoviesCard />
-        </li>
-        <li className="movies-list__element">
-          <MoviesCard />
-        </li>
-      </ul>
+      <SearchForm />
+      <MoviesCardList />
+      <Button text={'Ещё'} type={'more'} />
       <Footer />
     </section>
   );
