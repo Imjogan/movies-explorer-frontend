@@ -33,6 +33,8 @@ const Button = ({
       ${type === 'delete' && `button_type_delete ${additionalClass}`}
       ${type === 'more' && 'button_type_more'}
       ${type === 'search' && 'button_type_search'}
+      ${type === 'edit' && `button_type_edit ${additionalClass}`}
+      ${type === 'logout' && 'button_type_logout'}
       `}
           type={buttonType || 'button'}
           onClick={onClick}

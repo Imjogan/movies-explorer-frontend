@@ -1,6 +1,8 @@
 import './App.css';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
+import SavedMovies from '../SavedMovies/SavedMovies';
+import Profile from '../Profile/Profile';
 import SideMenu from '../SideMenu/SideMenu';
 import { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
@@ -56,6 +58,20 @@ const App = () => {
         </Route>
         <Route path="/movies">
           <Movies
+            isTablet={isTablet}
+            isLoggedIn={isLoggedIn}
+            openSideMenu={openSideMenu}
+          />
+        </Route>
+        <Route path="/saved-movies">
+          <SavedMovies
+            isTablet={isTablet}
+            isLoggedIn={isLoggedIn}
+            openSideMenu={openSideMenu}
+          />
+        </Route>
+        <Route path="/profile">
+          <Profile
             isTablet={isTablet}
             isLoggedIn={isLoggedIn}
             openSideMenu={openSideMenu}

@@ -3,7 +3,6 @@
   margin: 0;
   border: none;
   cursor: pointer;
-  outline: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -98,7 +97,7 @@
 }
 
 .button_type_search {
-  background: #3456F3;
+  background: #3456f3;
   border-radius: 48px;
   background-image: url(../../images/arrow.svg);
   background-repeat: no-repeat;
@@ -109,8 +108,49 @@
   margin-left: 46px;
 }
 
+.button_type_edit {
+  font-size: 13px;
+  line-height: 16px;
+  background-color: transparent;
+  margin-top: 204px;
+}
+
+.button_type_logout {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 16px;
+  color: #ee3465;
+  margin-top: 16px;
+  background-color: transparent;
+}
+
 .button_visible {
   opacity: 1;
+}
+
+.button_disabled {
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  opacity: 0.2;
+}
+
+@media screen and (max-width: 768px) {
+  .button_type_edit {
+    margin-top: 194px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .button_type_edit {
+    margin-top: auto;
+  }
+
+  .button_type_logout {
+    margin-bottom: 40px;
+  }
 }
 
 @media screen and (max-width: 425px) {
