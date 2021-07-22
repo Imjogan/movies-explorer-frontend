@@ -10,14 +10,14 @@ const FilterCheckbox = () => {
 
   return (
     <section className="filter-checkbox">
-      <label class="filter-checkbox__switch">
+      <label className="filter-checkbox__switch">
         <input
-          onClick={handleCheck}
           className="filter-checkbox__checkbox"
           type="checkbox"
           checked={isChecked}
+          onChange={handleCheck}
         />
-        <span class="filter-checkbox__round"></span>
+        <span className="filter-checkbox__round"></span>
       </label>
       <p className="filter-checkbox__title">Короткометражки</p>
     </section>

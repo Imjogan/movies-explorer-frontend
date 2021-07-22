@@ -4,6 +4,46 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import Button from '../Button/Button';
 import SearchForm from '../SearchForm/SearchForm';
+import moviePicture from '../../images/movie.jpg';
+
+const movies = [
+  {
+    name: '33 слова о дизайне',
+    image: moviePicture,
+    duration: 1234,
+    trailer: 'http://yandex.ru',
+  },
+  {
+    name: '33 слова о дизайне',
+    image: moviePicture,
+    duration: 1234,
+    trailer: 'http://yandex.ru',
+  },
+  {
+    name: '33 слова о дизайне',
+    image: moviePicture,
+    duration: 1234,
+    trailer: 'http://yandex.ru',
+  },
+  {
+    name: '33 слова о дизайне',
+    image: moviePicture,
+    duration: 1234,
+    trailer: 'http://yandex.ru',
+  },
+  {
+    name: '33 слова о дизайне',
+    image: moviePicture,
+    duration: 1234,
+    trailer: 'http://yandex.ru',
+  },
+  {
+    name: '33 слова о дизайне',
+    image: moviePicture,
+    duration: 1234,
+    trailer: 'http://yandex.ru',
+  },
+];
 
 const Movies = ({ isTablet, isLoggedIn, openSideMenu }) => {
   return (
@@ -15,7 +55,7 @@ const Movies = ({ isTablet, isLoggedIn, openSideMenu }) => {
         theme={'white'}
       />
       <SearchForm />
-      <MoviesCardList />
+      <MoviesCardList movies={movies} />
       <Button text={'Ещё'} type={'more'} />
       <Footer />
     </section>

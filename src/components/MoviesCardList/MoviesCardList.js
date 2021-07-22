@@ -1,45 +1,16 @@
 import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
+import Preloader from '../Preloader/Preloader';
 
-const MoviesCardList = () => {
+const MoviesCardList = ({ movies }) => {
   return (
     <ul className="movies-list">
-      <li className="movies-list__element">
-        <MoviesCard />
-      </li>
-      <li className="movies-list__element">
-        <MoviesCard />
-      </li>
-      <li className="movies-list__element">
-        <MoviesCard />
-      </li>
-      <li className="movies-list__element">
-        <MoviesCard />
-      </li>
-      <li className="movies-list__element">
-        <MoviesCard />
-      </li>
-      <li className="movies-list__element">
-        <MoviesCard />
-      </li>
-      <li className="movies-list__element">
-        <MoviesCard />
-      </li>
-      <li className="movies-list__element">
-        <MoviesCard />
-      </li>
-      <li className="movies-list__element">
-        <MoviesCard />
-      </li>
-      <li className="movies-list__element">
-        <MoviesCard />
-      </li>
-      <li className="movies-list__element">
-        <MoviesCard />
-      </li>
-      <li className="movies-list__element">
-        <MoviesCard />
-      </li>
+      {/* <Preloader /> */}
+      {movies?.map((movie, i) => (
+        <li key={i} className="movies-list__element">
+          <MoviesCard key={movie.id} movie={movie} />
+        </li>
+      ))}
     </ul>
   );
 };

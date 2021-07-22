@@ -1,9 +1,8 @@
 import './MoviesCard.css';
-import moviePicture from '../../images/movie.jpg';
 import Button from '../Button/Button';
 import { useState } from 'react';
 
-const MoviesCard = () => {
+const MoviesCard = ({ movie }) => {
   const [isButtonVisible, setIsButtonVisible] = useState(false);
 
   const handleMouseOverImage = () => {
@@ -19,10 +18,14 @@ const MoviesCard = () => {
       <a
         onMouseOut={handleMouseOutImage}
         onMouseOver={handleMouseOverImage}
-        href="#"
+        href={movie.trailer}
         target="blank"
       >
-        <img className="movies-card__image" src={moviePicture} alt="Название" />
+        <img
+          className="movies-card__image"
+          src={movie.image}
+          alt={movie.name}
+        />
         <Button
           additionalClass={isButtonVisible && 'button_visible'}
           text={'Сохранить'}
@@ -35,8 +38,10 @@ const MoviesCard = () => {
         /> */}
       </a>
       <div className="movies-card__info">
-        <p className="movies-card__name">33 слова о дизайне</p>
-        <div className="movies-card__duration">1ч 17м</div>
+        <p className="movies-card__name">{movie.name}</p>
+        <div className="movies-card__duration">{`${Math.floor(
+          movie.duration / 60
+        )}ч ${movie.duration % 60}м`}</div>
       </div>
     </section>
   );

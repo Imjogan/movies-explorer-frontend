@@ -87,99 +87,98 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
     isDisabledDefault || isSubmitDisabled || isSubmittingProfile;
 
   return (
-    <section className="profile">
+    <>
       <Header
         isTablet={isTablet}
         isLoggedIn={isLoggedIn}
         openSideMenu={openSideMenu}
         theme={'white'}
       />
-      <h3 className="profile__greeting">{`Привет, Иван!`}</h3>
-      <form
-        onSubmit={handleSubmit}
-        noValidate
-        name="profile"
-        className="profile__form"
-      >
-        <fieldset className="form__fields">
-          <div className="profile__container">
-            <p className="profile__input-caption">Имя</p>
-            <label className="label">
-              <input
-                type="text"
-                placeholder="Введите имя"
-                className={`form__input ${
-                  isDisabledDefault
-                    ? ''
-                    : isNameInvalid && 'form__input_type_error'
-                }`}
-                name="name"
-                required
-                minLength={minInputLength}
-                id="name-input"
-                value={name}
-                onChange={handleInputChange}
-              />
-              <span
-                className={`form__error ${
-                  isDisabledDefault
-                    ? ''
-                    : isNameInvalid && 'form__error_visible'
-                }`}
-              >
-                {isAnyParamsNameValid
-                  ? errors.name.required
-                    ? 'Поле обязательно для заполнения'
-                    : `Введите имя не короче ${minInputLength} символов`
-                  : ''}
-              </span>
-            </label>
-          </div>
-          <div className="profile__container">
-            <p className="profile__input-caption">E-mail</p>
-            <label className="label">
-              <input
-                type="email"
-                placeholder="Email"
-                className={`form__input ${
-                  isDisabledDefault
-                    ? ''
-                    : isEmailInvalid && 'form__input_type_error'
-                }`}
-                name="email"
-                required
-                id="email-input"
-                value={email}
-                onChange={handleInputChange}
-              />
-              <span
-                className={`form__error ${
-                  isDisabledDefault
-                    ? ''
-                    : isEmailInvalid && 'form__error_visible'
-                }`}
-              >
-                {isAnyParamsEmailValid
-                  ? errors.email.required
-                    ? 'Поле обязательно для заполнения'
-                    : 'Введите Email-адрес'
-                  : ''}
-              </span>
-            </label>
-          </div>
-        </fieldset>
-        <Button
-          additionalClass={isDisabled && 'button_disabled'}
-          text={isSubmittingProfile ? 'Сохранение...' : 'Редактировать'}
-          type={'edit'}
-          buttonType="submit"
-        />
-      </form>
-      <Button
-        text={'Выйти из аккаунта'}
-        type={'logout'}
-      />
-    </section>
+      <section className="profile">
+        <h3 className="profile__greeting">{`Привет, Иван!`}</h3>
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          name="profile"
+          className="form"
+        >
+          <fieldset className="form__fields">
+            <div className="profile__container">
+              <p className="profile__input-caption">Имя</p>
+              <label className="label">
+                <input
+                  type="text"
+                  placeholder="Введите имя"
+                  className={`form__input ${
+                    isDisabledDefault
+                      ? ''
+                      : isNameInvalid && 'form__input_type_error'
+                  }`}
+                  name="name"
+                  required
+                  minLength={minInputLength}
+                  id="name-input"
+                  value={name}
+                  onChange={handleInputChange}
+                />
+                <span
+                  className={`form__error ${
+                    isDisabledDefault
+                      ? ''
+                      : isNameInvalid && 'form__error_visible'
+                  }`}
+                >
+                  {isAnyParamsNameValid
+                    ? errors.name.required
+                      ? 'Поле обязательно для заполнения'
+                      : `Введите имя не короче ${minInputLength} символов`
+                    : ''}
+                </span>
+              </label>
+            </div>
+            <div className="profile__container">
+              <p className="profile__input-caption">E-mail</p>
+              <label className="label">
+                <input
+                  type="email"
+                  placeholder="Email"
+                  className={`form__input ${
+                    isDisabledDefault
+                      ? ''
+                      : isEmailInvalid && 'form__input_type_error'
+                  }`}
+                  name="email"
+                  required
+                  id="email-input"
+                  value={email}
+                  onChange={handleInputChange}
+                />
+                <span
+                  className={`form__error ${
+                    isDisabledDefault
+                      ? ''
+                      : isEmailInvalid && 'form__error_visible'
+                  }`}
+                >
+                  {isAnyParamsEmailValid
+                    ? errors.email.required
+                      ? 'Поле обязательно для заполнения'
+                      : 'Введите Email-адрес'
+                    : ''}
+                </span>
+              </label>
+            </div>
+          </fieldset>
+          <Button
+            additionalClass={isDisabled && 'button_disabled'}
+            text={isSubmittingProfile ? 'Сохранение...' : 'Редактировать'}
+            type={'edit'}
+            buttonType="submit"
+          />
+        </form>
+        <Button text={'Выйти из аккаунта'} type={'logout'} />
+      </section>
+    </>
   );
 };
 

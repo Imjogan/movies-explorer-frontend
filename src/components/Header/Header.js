@@ -1,7 +1,7 @@
 import './Header.css';
-import headerLogo from '../../images/header/logo.svg';
 import Navigation from '../Navigation/Navigation';
 import Button from '../Button/Button';
+import Logo from '../Logo/Logo';
 import BurgerButton from '../BurgerButton/BurgerButton';
 import { Link } from 'react-router-dom';
 
@@ -9,17 +9,12 @@ const Header = ({ isLoggedIn, openSideMenu, isTablet, theme }) => {
   return (
     <header className={`header ${theme === 'white' && 'header_theme_white'}`}>
       <div className="header__logo-wrapper">
-        <Link to="/">
-          <img className="header__logo" src={headerLogo} alt="Логотип сайта" />
-        </Link>
+        <Logo />
       </div>
       {isLoggedIn && !isTablet && <Navigation />}
       <nav className="header__menu">
         {!isLoggedIn && (
-          <Link
-            to="/signup"
-            className="header__link"
-          >
+          <Link to="/signup" className="header__link">
             Регистрация
           </Link>
         )}

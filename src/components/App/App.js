@@ -4,6 +4,9 @@ import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
 import Profile from '../Profile/Profile';
 import SideMenu from '../SideMenu/SideMenu';
+import Register from '../Register/Register';
+import Login from '../Login/Login';
+import PageNotFound from '../PageNotFound/PageNotFound';
 import { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { Route, Switch } from 'react-router-dom';
@@ -76,6 +79,15 @@ const App = () => {
             isLoggedIn={isLoggedIn}
             openSideMenu={openSideMenu}
           />
+        </Route>
+        <Route path="/signup">
+          <Register />
+        </Route>
+        <Route path="/signin">
+          <Login />
+        </Route>
+        <Route path="*">
+          <PageNotFound />
         </Route>
       </Switch>
     </section>

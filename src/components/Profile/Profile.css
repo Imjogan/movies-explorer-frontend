@@ -1,7 +1,7 @@
 .profile {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  padding: 74px 0 0;
 }
 
 .profile__greeting {
@@ -10,7 +10,7 @@
   font-size: 24px;
   line-height: 29px;
   text-align: center;
-  margin: 74px 0 0;
+  margin: 0;
 }
 
 .profile__container {
@@ -20,7 +20,7 @@
 }
 
 .profile__container:first-of-type {
-  border-bottom: 1px solid #E8E8E8;
+  border-bottom: 1px solid #e8e8e8;
 }
 
 .profile__container:last-of-type {
@@ -39,7 +39,7 @@
   align-items: center;
 }
 
-.profile__form {
+.form {
   width: 410px;
   display: flex;
   flex-direction: column;
@@ -133,21 +133,24 @@
 }
 
 @media screen and (max-width: 768px) {
-  .profile__greeting {
-    margin-top: 236px;
+  .profile {
+    padding: 0;
+    margin: auto;
   }
 
-  .profile__form {
+  .form {
     margin-top: 96px;
   }
 }
 
 @media screen and (max-width: 450px) {
-  .profile__greeting {
-    margin-top: 70px;
+  .profile {
+    padding-top: 70px;
+    margin: 0 auto;
+    height: 100%;
   }
 
-  .profile__form {
+  .form {
     width: 260px;
     margin-top: 80px;
     height: 100%;

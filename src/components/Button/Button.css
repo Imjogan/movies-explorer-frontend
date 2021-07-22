@@ -124,6 +124,30 @@
   background-color: transparent;
 }
 
+.button_type_register {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #ffffff;
+  background: #3456f3;
+  border-radius: 3px;
+  width: 100%;
+  padding: 15px 0;
+  margin-top: 70px;
+}
+
+.button_type_login-form {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #ffffff;
+  background: #3456f3;
+  border-radius: 3px;
+  width: 100%;
+  padding: 15px 0;
+  margin-top: 70px;
+}
+
 .button_visible {
   opacity: 1;
 }
@@ -150,6 +174,14 @@
 
   .button_type_logout {
     margin-bottom: 40px;
+  }
+
+  .button_type_register {
+    margin-top: auto;
+  }
+
+  .button_type_login-form {
+    margin-top: auto;
   }
 }
 
