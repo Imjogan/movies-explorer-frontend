@@ -5,7 +5,7 @@ import Footer from '../Footer/Footer';
 import Button from '../Button/Button';
 import SearchForm from '../SearchForm/SearchForm';
 import moviePicture from '../../images/movie.jpg';
-
+// временный массив карточек
 const movies = [
   {
     name: '33 слова о дизайне',

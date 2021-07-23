@@ -1,7 +1,6 @@
 import './BurgerButton.css';
 
-function BurgerButton({openSideMenu}) {
-
+function BurgerButton({ openSideMenu }) {
   const handleClick = () => {
     openSideMenu();
   };

@@ -2,32 +2,20 @@ import './Profile.css';
 import Header from '../Header/Header';
 import Button from '../Button/Button';
 import { useState, useEffect, useCallback } from 'react';
-import { validateField } from '../../utils/utils';
+import { validateField, validators } from '../../utils/utils';
 import { minInputLength } from '../../utils/constants';
 
-const validators = {
-  name: {
-    required: (value) => value === '',
-    minLength: (value) => value.length < minInputLength,
-  },
-  email: {
-    required: (value) => value === '',
-    email: (value) =>
-      !/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-        value
-      ),
-  },
-};
-
 const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
+  // стейт блокировки submit-а
   const [isDisabledDefault, setIsDisabledDefault] = useState(true);
+  // стейт состояния выполнения submit-а
   const [isSubmittingProfile, setIsSubmittingProfile] = useState(false);
-
+  // стейт значений инпутов
   const [formValues, setFormValues] = useState({
     name: '',
     email: '',
   });
-
+  // обнуляем инпуты при обновлении компонента
   useEffect(() => {
     setIsDisabledDefault(true);
     return () => {
@@ -37,7 +25,7 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
       });
     };
   }, []);
-
+  // состояние ошибок в инпутах
   const [errors, setErrors] = useState({
     name: {
       required: true,
@@ -48,11 +36,11 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
       email: true,
     },
   });
-
+  // обработчик submit-а
   const handleSubmit = (evt) => {
     evt.preventDefault();
   };
-
+  // обработчик изменения инпутов
   const handleInputChange = useCallback(
     (evt) => {
       setIsDisabledDefault(false);
@@ -61,7 +49,7 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
     },
     [setFormValues]
   );
-
+  // валидация инпутов при обновлении значений
   useEffect(
     function validateInputs() {
       const { name, email } = formValues;
@@ -74,12 +62,13 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
     },
     [formValues, setErrors]
   );
-
+  // вытаскиваем значения инпутов
   const { name, email } = formValues;
+  // проверяем валидность инпутов
   const isNameInvalid = Object.values(errors.name).some(Boolean);
   const isEmailInvalid = Object.values(errors.email).some(Boolean);
+  // submit доступен при выполнении всех условий
   const isSubmitDisabled = isNameInvalid || isEmailInvalid;
-
   const isAnyParamsNameValid = errors.name.required || errors.name.minLength;
   const isAnyParamsEmailValid = errors.email.required || errors.email.email;
 
@@ -100,19 +89,19 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
           onSubmit={handleSubmit}
           noValidate
           name="profile"
-          className="form"
+          className="profile__form"
         >
-          <fieldset className="form__fields">
+          <fieldset className="profile__form-fields">
             <div className="profile__container">
               <p className="profile__input-caption">Имя</p>
-              <label className="label">
+              <label className="profile__label">
                 <input
                   type="text"
                   placeholder="Введите имя"
-                  className={`form__input ${
+                  className={`profile__form-input ${
                     isDisabledDefault
                       ? ''
-                      : isNameInvalid && 'form__input_type_error'
+                      : isNameInvalid && 'profile__form-input_type_error'
                   }`}
                   name="name"
                   required
@@ -122,10 +111,10 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
                   onChange={handleInputChange}
                 />
                 <span
-                  className={`form__error ${
+                  className={`profile__form-error ${
                     isDisabledDefault
                       ? ''
-                      : isNameInvalid && 'form__error_visible'
+                      : isNameInvalid && 'profile__form-error_visible'
                   }`}
                 >
                   {isAnyParamsNameValid
@@ -138,14 +127,14 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
             </div>
             <div className="profile__container">
               <p className="profile__input-caption">E-mail</p>
-              <label className="label">
+              <label className="profile__label">
                 <input
                   type="email"
                   placeholder="Email"
-                  className={`form__input ${
+                  className={`profile__form-input ${
                     isDisabledDefault
                       ? ''
-                      : isEmailInvalid && 'form__input_type_error'
+                      : isEmailInvalid && 'profile__form-input_type_error'
                   }`}
                   name="email"
                   required
@@ -154,10 +143,10 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
                   onChange={handleInputChange}
                 />
                 <span
-                  className={`form__error ${
+                  className={`profile__form-error ${
                     isDisabledDefault
                       ? ''
-                      : isEmailInvalid && 'form__error_visible'
+                      : isEmailInvalid && 'profile__form-error_visible'
                   }`}
                 >
                   {isAnyParamsEmailValid

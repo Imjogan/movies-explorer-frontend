@@ -6,13 +6,13 @@ function SideMenu({ isSideMenu, closeSideMenu }) {
   return (
     <section className={`side-menu ${isSideMenu && 'side-menu_opened'}`}>
       <div className="side-menu__content">
-        <button
-          onClick={closeSideMenu}
-          type="button"
-          className="side-menu__button-close"
-        />
+        <Button onClick={closeSideMenu} type={'close'} />
         <Navigation navStyle={'side'} closeSideMenu={closeSideMenu} />
-        <Button type={'account'} text={'Аккаунт'} closeSideMenu={closeSideMenu} />
+        <Button
+          type={'account'}
+          text={'Аккаунт'}
+          closeSideMenu={closeSideMenu}
+        />
       </div>
     </section>
   );

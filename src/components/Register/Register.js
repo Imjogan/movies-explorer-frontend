@@ -1,7 +1,7 @@
 import './Register.css';
 import Button from '../Button/Button';
 import { useState, useEffect, useCallback } from 'react';
-import { validateField } from '../../utils/utils';
+import { validateField, validators } from '../../utils/utils';
 import {
   minInputLength,
   minInputPasswordLength,
@@ -10,35 +10,18 @@ import {
 import Logo from '../Logo/Logo';
 import { Link } from 'react-router-dom';
 
-const validators = {
-  name: {
-    required: (value) => value === '',
-    minLength: (value) => value.length < minInputLength,
-    maxLength: (value) => value.length > maxInputLength,
-  },
-  email: {
-    required: (value) => value === '',
-    email: (value) =>
-      !/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-        value
-      ),
-  },
-  password: {
-    required: (value) => value === '',
-    minLength: (value) => value.length < minInputPasswordLength,
-  },
-};
-
 const Register = () => {
+  // стейт блокировки submit-а
   const [isDisabledDefault, setIsDisabledDefault] = useState(true);
+  // стейт состояния выполнения submit-а
   const [isSubmittingRegister, setIsSubmittingRegister] = useState(false);
-
+  // стейт значений инпутов
   const [formValues, setFormValues] = useState({
     name: '',
     email: '',
     password: '',
   });
-
+  // обнуляем инпуты при обновлении компонента
   useEffect(() => {
     setIsDisabledDefault(true);
     return () => {
@@ -49,7 +32,7 @@ const Register = () => {
       });
     };
   }, []);
-
+  // состояние ошибок в инпутах
   const [errors, setErrors] = useState({
     name: {
       required: true,
@@ -65,11 +48,11 @@ const Register = () => {
       minLength: true,
     },
   });
-
+  // обработчик submit-а
   const handleSubmit = (evt) => {
     evt.preventDefault();
   };
-
+  // обработчик изменения инпутов
   const handleInputChange = useCallback(
     (evt) => {
       setIsDisabledDefault(false);
@@ -78,7 +61,7 @@ const Register = () => {
     },
     [setFormValues]
   );
-
+  // валидация инпутов при обновлении значений
   useEffect(
     function validateInputs() {
       const { name, email, password } = formValues;
@@ -96,13 +79,14 @@ const Register = () => {
     },
     [formValues, setErrors]
   );
-
+  // вытаскиваем значения инпутов
   const { name, email, password } = formValues;
+  // проверяем валидность инпутов
   const isNameInvalid = Object.values(errors.name).some(Boolean);
   const isEmailInvalid = Object.values(errors.email).some(Boolean);
   const isPasswordInvalid = Object.values(errors.password).some(Boolean);
+  // submit доступен при выполнении всех условий
   const isSubmitDisabled = isNameInvalid || isEmailInvalid || isPasswordInvalid;
-
   const isAnyParamsNameValid =
     errors.name.required || errors.name.minLength || errors.name.maxLength;
   const isAnyParamsEmailValid = errors.email.required || errors.email.email;

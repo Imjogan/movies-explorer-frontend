@@ -37,6 +37,7 @@ const Button = ({
       ${type === 'logout' && 'button_type_logout'}
       ${type === 'register' && `button_type_register ${additionalClass}`}
       ${type === 'login-form' && `button_type_login-form ${additionalClass}`}
+      ${type === 'close' && `button_type_close ${additionalClass}`}
       `}
           type={buttonType || 'button'}
           onClick={onClick}

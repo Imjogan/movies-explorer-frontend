@@ -6,6 +6,7 @@ import Profile from '../Profile/Profile';
 import SideMenu from '../SideMenu/SideMenu';
 import Register from '../Register/Register';
 import Login from '../Login/Login';
+import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
@@ -14,7 +15,9 @@ import { Route, Switch } from 'react-router-dom';
 const App = () => {
   //определяем устройство
   const isTablet = useMediaQuery({ query: '(max-width: 768px)' });
-
+  // состояние попапа информации
+  const [isInfoTooltipVisible, setIsInfoTooltipVisible] = useState(true);
+  const [isSuccessful, setIsSuccessful] = useState(false);
   // состояние авторизации
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   // состояние side-меню
@@ -90,6 +93,11 @@ const App = () => {
           <PageNotFound />
         </Route>
       </Switch>
+      <InfoTooltip
+        setIsInfoTooltipVisible={setIsInfoTooltipVisible}
+        isInfoTooltipVisible={isInfoTooltipVisible}
+        isSuccessful={isSuccessful}
+      />
     </section>
   );
 };

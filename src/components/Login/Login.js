@@ -1,34 +1,22 @@
 import './Login.css';
 import Button from '../Button/Button';
 import { useState, useEffect, useCallback } from 'react';
-import { validateField } from '../../utils/utils';
-import { minInputLength, minInputPasswordLength } from '../../utils/constants';
+import { validateField, validators } from '../../utils/utils';
+import { minInputPasswordLength } from '../../utils/constants';
 import Logo from '../Logo/Logo';
 import { Link } from 'react-router-dom';
 
-const validators = {
-  email: {
-    required: (value) => value === '',
-    email: (value) =>
-      !/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-        value
-      ),
-  },
-  password: {
-    required: (value) => value === '',
-    minLength: (value) => value.length < minInputPasswordLength,
-  },
-};
-
 const Login = () => {
+  // стейт блокировки submit-а
   const [isDisabledDefault, setIsDisabledDefault] = useState(true);
+  // стейт состояния выполнения submit-а
   const [isSubmittingLogin, setIsSubmittingLogin] = useState(false);
-
+  // стейт значений инпутов
   const [formValues, setFormValues] = useState({
     email: '',
     password: '',
   });
-
+  // обнуляем инпуты при обновлении компонента
   useEffect(() => {
     setIsDisabledDefault(true);
     return () => {
@@ -38,7 +26,7 @@ const Login = () => {
       });
     };
   }, []);
-
+  // состояние ошибок в инпутах
   const [errors, setErrors] = useState({
     email: {
       required: true,
@@ -49,11 +37,11 @@ const Login = () => {
       minLength: true,
     },
   });
-
+  // обработчик submit-а
   const handleSubmit = (evt) => {
     evt.preventDefault();
   };
-
+  // обработчик изменения инпутов
   const handleInputChange = useCallback(
     (evt) => {
       setIsDisabledDefault(false);
@@ -62,7 +50,7 @@ const Login = () => {
     },
     [setFormValues]
   );
-
+  // валидация инпутов при обновлении значений
   useEffect(
     function validateInputs() {
       const { email, password } = formValues;
@@ -78,12 +66,13 @@ const Login = () => {
     },
     [formValues, setErrors]
   );
-
+  // вытаскиваем значения инпутов
   const { email, password } = formValues;
+  // проверяем валидность инпутов
   const isEmailInvalid = Object.values(errors.email).some(Boolean);
   const isPasswordInvalid = Object.values(errors.password).some(Boolean);
+  // submit доступен при выполнении всех условий
   const isSubmitDisabled = isEmailInvalid || isPasswordInvalid;
-
   const isAnyParamsEmailValid = errors.email.required || errors.email.email;
   const isAnyParamsPasswordValid =
     errors.password.required || errors.password.minLength;

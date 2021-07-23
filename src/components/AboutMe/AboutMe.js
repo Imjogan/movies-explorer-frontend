@@ -1,6 +1,6 @@
 import './AboutMe.css';
 import HeaderBlock from '../HeaderBlock/HeaderBlock';
-import studentPhoto from '../../images/student.jpg';
+import studentPhoto from '../../images/promo/student.jpg';
 
 const AboutMe = () => {
   return (

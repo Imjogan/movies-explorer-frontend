@@ -3,9 +3,9 @@ import { NavLink } from 'react-router-dom';
 import { navLinks } from '../../utils/links';
 
 const Navigation = ({ navStyle, closeSideMenu }) => {
-
   return (
     <nav className={navStyle === 'side' ? 'side-navigation' : 'navigation'}>
+      {/* если навигация в боковом меню - загружаем массив ссылок с главной */}
       {(navStyle === 'side' ? navLinks : navLinks.slice(1)).map((link, i) => (
         <NavLink
           exact
