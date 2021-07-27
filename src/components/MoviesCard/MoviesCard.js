@@ -1,8 +1,11 @@
 import './MoviesCard.css';
 import Button from '../Button/Button';
 import { useState } from 'react';
+import { useLocation } from 'react-router';
 
-const MoviesCard = ({ movie }) => {
+const MoviesCard = ({ movie, setMovies, movies }) => {
+  const location = useLocation();
+
   const [isButtonVisible, setIsButtonVisible] = useState(false);
   // показываем кнопку при наведении на карточку, если разрешение выше планшетного
   const handleMouseOverImage = () => {
@@ -12,6 +15,30 @@ const MoviesCard = ({ movie }) => {
   const handleMouseOutImage = () => {
     setIsButtonVisible(false);
   };
+
+  const handleButtonSaveClick = () => {
+    setMovies(updateState('saved'));
+  };
+
+  const handleButtonSavedClick = () => {
+    setMovies(updateState('unsaved'));
+  };
+
+  const handleButtonDeleteClick = () => {
+    setMovies(updateState('unsaved'));
+  };
+
+  function updateState(newStatus) {
+    return movies.map((el) => {
+      if (el.id === movie.id) {
+        return {
+          ...el,
+          status: newStatus,
+        };
+      }
+      return el;
+    });
+  }
 
   return (
     <section className="movies-card">
@@ -26,20 +53,25 @@ const MoviesCard = ({ movie }) => {
           src={movie.image}
           alt={movie.name}
         />
-        {/* если карточка не добавлена пользователем - должна быть кнопка "сохранить" */}
+      </a>
+      {movie.status === 'saved' ? (
+        location.pathname !== '/saved-movies' ? (
+          <Button type={'saved'} onClick={handleButtonSavedClick} />
+        ) : (
+          <Button
+            additionalClass={isButtonVisible && 'button_visible'}
+            type={'delete'}
+            onClick={handleButtonDeleteClick}
+          />
+        )
+      ) : (
         <Button
           additionalClass={isButtonVisible && 'button_visible'}
           text={'Сохранить'}
           type={'save'}
+          onClick={handleButtonSaveClick}
         />
-        {/* если карточка сохранена у пользователя - на странице фильмов должна быть кнпока "добавлено" */}
-        {/* <Button type={'saved'} /> */}
-        {/* если карточка сохранена у пользователя - на странице сохраненных фильмов должна быть кнпока "удалить" */}
-        {/* <Button
-          additionalClass={isButtonVisible && 'button_visible'}
-          type={'delete'}
-        /> */}
-      </a>
+      )}
       <div className="movies-card__info">
         <p className="movies-card__name">{movie.name}</p>
         <div className="movies-card__duration">{`${Math.floor(

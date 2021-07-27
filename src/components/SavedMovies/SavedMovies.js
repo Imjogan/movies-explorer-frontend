@@ -4,7 +4,17 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import SearchForm from '../SearchForm/SearchForm';
 
-const SavedMovies = ({ isTablet, isLoggedIn, openSideMenu }) => {
+const SavedMovies = ({
+  isTablet,
+  isLoggedIn,
+  openSideMenu,
+  movies,
+  setMovies,
+}) => {
+  const savedMovies = movies.filter(
+    (movie) => movie.status === 'saved' && movie
+  );
+
   return (
     <section className="saved-movies">
       <Header
@@ -14,7 +24,7 @@ const SavedMovies = ({ isTablet, isLoggedIn, openSideMenu }) => {
         theme={'white'}
       />
       <SearchForm />
-      <MoviesCardList />
+      <MoviesCardList movies={savedMovies} setMovies={setMovies} />
       <Footer />
     </section>
   );

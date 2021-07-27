@@ -11,6 +11,7 @@ import PageNotFound from '../PageNotFound/PageNotFound';
 import { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { Route, Switch } from 'react-router-dom';
+import moviePicture from '../../images/movie.jpg';
 
 const App = () => {
   //определяем устройство
@@ -47,6 +48,58 @@ const App = () => {
     }
   };
 
+  // временное решение
+  const [movies, setMovies] = useState([
+    {
+      name: '33 слова о дизайне',
+      image: moviePicture,
+      duration: 1234,
+      trailer: 'http://yandex.ru',
+      status: 'saved',
+      id: 0,
+    },
+    {
+      name: '33 слова о дизайне',
+      image: moviePicture,
+      duration: 1234,
+      trailer: 'http://yandex.ru',
+      status: 'unsaved',
+      id: 1,
+    },
+    {
+      name: '33 слова о дизайне',
+      image: moviePicture,
+      duration: 1234,
+      trailer: 'http://yandex.ru',
+      status: 'saved',
+      id: 2,
+    },
+    {
+      name: '33 слова о дизайне',
+      image: moviePicture,
+      duration: 1234,
+      trailer: 'http://yandex.ru',
+      status: 'unsaved',
+      id: 3,
+    },
+    {
+      name: '33 слова о дизайне',
+      image: moviePicture,
+      duration: 1234,
+      trailer: 'http://yandex.ru',
+      status: 'saved',
+      id: 4,
+    },
+    {
+      name: '33 слова о дизайне',
+      image: moviePicture,
+      duration: 1234,
+      trailer: 'http://yandex.ru',
+      status: 'unsaved',
+      id: 5,
+    },
+  ]);
+
   return (
     <section className="app">
       <SideMenu
@@ -64,6 +117,8 @@ const App = () => {
         </Route>
         <Route path="/movies">
           <Movies
+            movies={movies}
+            setMovies={setMovies}
             isTablet={isTablet}
             isLoggedIn={isLoggedIn}
             openSideMenu={openSideMenu}
@@ -71,6 +126,8 @@ const App = () => {
         </Route>
         <Route path="/saved-movies">
           <SavedMovies
+            setMovies={setMovies}
+            movies={movies}
             isTablet={isTablet}
             isLoggedIn={isLoggedIn}
             openSideMenu={openSideMenu}
