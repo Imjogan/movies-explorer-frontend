@@ -11,8 +11,6 @@ const SearchForm = ({
   setIsSubmittingSearch,
   setFoundMovies,
 }) => {
-  // собираем все фильмы в стейт после поиска
-  const [movies, setMovies] = useState([]);
   // стейт значения инпута
   const [formValue, setFormValue] = useState({
     search: '',
@@ -73,7 +71,11 @@ const SearchForm = ({
       moviesApi
         .getMovies()
         .then((movies) => {
-          setMovies(movies);
+          getCurrentMovies(
+            movies.filter((movie) =>
+              movie.nameRU.toLowerCase().includes(search.toLowerCase())
+            )
+          );
         })
         .catch((error) => {
           console.log(error);
@@ -84,18 +86,9 @@ const SearchForm = ({
     }
   };
 
-  // находим нужные фильмы
-  useEffect(() => {
-    getCurrentMovies(
-      movies.filter((movie) =>
-        movie.nameRU.toLowerCase().includes(search.toLowerCase())
-      )
-    );
-  }, [movies, search, getCurrentMovies]);
-
   return (
     <section className="search-form">
-      <form className="search-form__form">
+      <form noValidate className="search-form__form">
         <div className="search-form__line-box">
           <input
             name="search"
