@@ -45,13 +45,13 @@ const MoviesCard = ({ movie, setMovies, movies }) => {
       <a
         onMouseOut={handleMouseOutImage}
         onMouseOver={handleMouseOverImage}
-        href={movie.trailer}
+        href={movie.trailerLink}
         target="blank"
       >
         <img
           className="movies-card__image"
-          src={movie.image}
-          alt={movie.name}
+          src={`https://api.nomoreparties.co${movie.image.url}`}
+          alt={movie.nameRU}
         />
       </a>
       {movie.status === 'saved' ? (
@@ -73,7 +73,7 @@ const MoviesCard = ({ movie, setMovies, movies }) => {
         />
       )}
       <div className="movies-card__info">
-        <p className="movies-card__name">{movie.name}</p>
+        <p className="movies-card__name">{movie.nameRU}</p>
         <div className="movies-card__duration">{`${Math.floor(
           movie.duration / 60
         )}ч ${movie.duration % 60}м`}</div>

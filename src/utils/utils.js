@@ -32,4 +32,7 @@ export const validators = {
     required: (value) => value === '',
     minLength: (value) => value.length < minInputPasswordLength,
   },
+  search: {
+    required: (value) => value === '',
+  }
 };

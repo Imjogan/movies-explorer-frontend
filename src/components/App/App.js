@@ -8,7 +8,7 @@ import Register from '../Register/Register';
 import Login from '../Login/Login';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import PageNotFound from '../PageNotFound/PageNotFound';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { Route, Switch } from 'react-router-dom';
 import moviePicture from '../../images/movie.jpg';
@@ -16,13 +16,20 @@ import moviePicture from '../../images/movie.jpg';
 const App = () => {
   //определяем устройство
   const isTablet = useMediaQuery({ query: '(max-width: 768px)' });
-  // состояние попапа информации
-  const [isInfoTooltipVisible, setIsInfoTooltipVisible] = useState(false);
-  const [isSuccessful, setIsSuccessful] = useState(false);
+  // состояние попапа информации и текст
+  const [tooltipState, setTooltipState] = useState({
+    tooltipVisible: false,
+    isSuccessful: false,
+    text: '',
+  });
   // состояние авторизации
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   // состояние side-меню
   const [isSideMenu, setIsSideMenu] = useState(false);
+  // стейт найденных фильмов
+  const [foundMovies, setFoundMovies] = useState([]);
+  // стейт состояния выполнения submit-а
+  const [isSubmittingSearch, setIsSubmittingSearch] = useState(false);
   // ф-я закрытия меню
   const closeSideMenu = () => {
     setIsSideMenu(false);
@@ -47,7 +54,13 @@ const App = () => {
       closeSideMenu();
     }
   };
-
+  // получаем фильмы
+  const getCurrentMovies = useCallback(
+    (movies) => {
+      setFoundMovies(movies);
+    },
+    [setFoundMovies]
+  );
   // временное решение
   const [movies, setMovies] = useState([
     {
@@ -117,7 +130,12 @@ const App = () => {
         </Route>
         <Route path="/movies">
           <Movies
-            movies={movies}
+            setFoundMovies={setFoundMovies}
+            isSubmittingSearch={isSubmittingSearch}
+            setIsSubmittingSearch={setIsSubmittingSearch}
+            getCurrentMovies={getCurrentMovies}
+            setTooltipState={setTooltipState}
+            foundMovies={foundMovies}
             setMovies={setMovies}
             isTablet={isTablet}
             isLoggedIn={isLoggedIn}
@@ -127,7 +145,7 @@ const App = () => {
         <Route path="/saved-movies">
           <SavedMovies
             setMovies={setMovies}
-            movies={movies}
+            foundMovies={foundMovies}
             isTablet={isTablet}
             isLoggedIn={isLoggedIn}
             openSideMenu={openSideMenu}
@@ -150,11 +168,7 @@ const App = () => {
           <PageNotFound />
         </Route>
       </Switch>
-      <InfoTooltip
-        setIsInfoTooltipVisible={setIsInfoTooltipVisible}
-        isInfoTooltipVisible={isInfoTooltipVisible}
-        isSuccessful={isSuccessful}
-      />
+      <InfoTooltip setTooltipState={setTooltipState} tooltipState={tooltipState} />
     </section>
   );
 };

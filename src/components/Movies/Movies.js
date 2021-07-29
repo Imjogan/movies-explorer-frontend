@@ -1,10 +1,20 @@
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-import Button from '../Button/Button';
 import SearchForm from '../SearchForm/SearchForm';
 
-const Movies = ({ isTablet, isLoggedIn, openSideMenu, movies, setMovies }) => {
+const Movies = ({
+  isTablet,
+  isLoggedIn,
+  openSideMenu,
+  foundMovies,
+  setMovies,
+  setTooltipState,
+  getCurrentMovies,
+  setIsSubmittingSearch,
+  isSubmittingSearch,
+  setFoundMovies
+}) => {
   return (
     <>
       <Header
@@ -13,10 +23,18 @@ const Movies = ({ isTablet, isLoggedIn, openSideMenu, movies, setMovies }) => {
         openSideMenu={openSideMenu}
         theme={'white'}
       />
+      <SearchForm
+      setFoundMovies={setFoundMovies}
+        setTooltipState={setTooltipState}
+        getCurrentMovies={getCurrentMovies}
+        setIsSubmittingSearch={setIsSubmittingSearch}
+      />
       <section className="movies">
-        <SearchForm />
-        <MoviesCardList movies={movies} setMovies={setMovies} />
-        <Button text={'Ещё'} type={'more'} />
+        <MoviesCardList
+          isSubmittingSearch={isSubmittingSearch}
+          foundMovies={foundMovies}
+          setMovies={setMovies}
+        />
       </section>
       <Footer />
     </>

@@ -5,21 +5,25 @@ import { useHistory } from 'react-router-dom';
 import Button from '../Button/Button';
 
 function InfoTooltip({
-  setIsInfoTooltipVisible,
-  isInfoTooltipVisible,
-  isSuccessful,
+  setTooltipState,
+  tooltipState,
 }) {
   const history = useHistory();
 
+  const {tooltipVisible, isSuccessful, text} = tooltipState;
+
   const handleCloseClick = () => {
-    setIsInfoTooltipVisible(false);
-    isSuccessful && history.push('/movies');
+    setTooltipState({
+      tooltipVisible: false,
+      isSuccessful: false,
+      text: text,
+    });
   };
 
   return (
     <section
       className={`info-tooltip ${
-        isInfoTooltipVisible && 'info-tooltip_opened'
+        tooltipVisible && 'info-tooltip_opened'
       }`}
     >
       <div className="info-tooltip__container">
@@ -34,9 +38,7 @@ function InfoTooltip({
           alt="Все прошло успешно!"
         />
         <h2 className="info-tooltip__title">
-          {isSuccessful
-            ? 'Все прошло успешно!'
-            : 'Что-то пошло не так! Попробуйте ещё раз.'}
+          {text}
         </h2>
       </div>
     </section>
