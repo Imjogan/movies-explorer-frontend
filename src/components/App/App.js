@@ -17,7 +17,7 @@ const App = () => {
   //определяем устройство
   const isTablet = useMediaQuery({ query: '(max-width: 768px)' });
   // состояние попапа информации
-  const [isInfoTooltipVisible, setIsInfoTooltipVisible] = useState(true);
+  const [isInfoTooltipVisible, setIsInfoTooltipVisible] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
   // состояние авторизации
   const [isLoggedIn, setIsLoggedIn] = useState(true);

@@ -1,32 +1,25 @@
-import './SavedMovies.css';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import SearchForm from '../SearchForm/SearchForm';
 
-const SavedMovies = ({
-  isTablet,
-  isLoggedIn,
-  openSideMenu,
-  movies,
-  setMovies,
-}) => {
-  const savedMovies = movies.filter(
-    (movie) => movie.status === 'saved' && movie
-  );
+const SavedMovies = ({ isTablet, isLoggedIn, openSideMenu, movies, setMovies }) => {
+  const savedMovies = movies.filter((movie) => movie.status === 'saved' && movie);
 
   return (
-    <section className="saved-movies">
+    <>
       <Header
         isTablet={isTablet}
         isLoggedIn={isLoggedIn}
         openSideMenu={openSideMenu}
         theme={'white'}
       />
-      <SearchForm />
-      <MoviesCardList movies={savedMovies} setMovies={setMovies} />
+      <section className="saved-movies">
+        <SearchForm />
+        <MoviesCardList movies={savedMovies} setMovies={setMovies} />
+      </section>
       <Footer />
-    </section>
+    </>
   );
 };
 

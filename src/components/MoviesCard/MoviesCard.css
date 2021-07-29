@@ -1,8 +1,6 @@
 .movies-card {
   display: flex;
   flex-direction: column;
-  justify-content: stretch;
-  align-items: flex-start;
   font-size: 0;
   position: relative;
   margin: 0;

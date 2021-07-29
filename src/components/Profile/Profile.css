@@ -148,7 +148,7 @@
   .profile {
     padding-top: 70px;
     margin: 0 auto;
-    height: 100%;
+    height: calc(100vh - 144px);
   }
 
   .profile__form {

@@ -1,7 +1,7 @@
 .login {
   display: flex;
   flex-direction: column;
-  margin: 0;
+  margin: 0 auto;
   padding: 70px 30px 0;
   max-width: 396px;
   width: 100%;
@@ -164,10 +164,10 @@
 
 @media screen and (max-width: 450px) {
   .login {
-    padding: 56px 30px 30px;
-    margin: 0;
     max-width: 260px;
-    height: 100%;
+    padding: 56px 30px 30px;
+    height: calc(100vh - 86px);
+    margin: 0 auto;
   }
 
   .login__logo-wrapper {
@@ -182,5 +182,15 @@
   .login__form {
     margin-top: 80px;
     height: 100%;
+  }
+
+  .login__register-text {
+    font-size: 12px;
+    line-height: 15px;
+  }
+  
+  .login__register {
+    font-size: 12px;
+    line-height: 15px;
   }
 }
