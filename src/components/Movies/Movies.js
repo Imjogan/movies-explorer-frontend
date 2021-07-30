@@ -5,15 +5,15 @@ import SearchForm from '../SearchForm/SearchForm';
 
 const Movies = ({
   isTablet,
+  isMobile,
   isLoggedIn,
   openSideMenu,
   foundMovies,
-  setMovies,
   setTooltipState,
   getCurrentMovies,
   setIsSubmittingSearch,
   isSubmittingSearch,
-  setFoundMovies
+  setFoundMovies,
 }) => {
   return (
     <>
@@ -24,16 +24,17 @@ const Movies = ({
         theme={'white'}
       />
       <SearchForm
-      setFoundMovies={setFoundMovies}
+        setFoundMovies={setFoundMovies}
         setTooltipState={setTooltipState}
         getCurrentMovies={getCurrentMovies}
         setIsSubmittingSearch={setIsSubmittingSearch}
       />
       <section className="movies">
         <MoviesCardList
+          isTablet={isTablet}
+          isMobile={isMobile}
           isSubmittingSearch={isSubmittingSearch}
           foundMovies={foundMovies}
-          setMovies={setMovies}
         />
       </section>
       <Footer />

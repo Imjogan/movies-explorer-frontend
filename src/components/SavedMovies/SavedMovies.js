@@ -3,8 +3,10 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import SearchForm from '../SearchForm/SearchForm';
 
-const SavedMovies = ({ isTablet, isLoggedIn, openSideMenu, foundMovies, setMovies }) => {
-  const savedMovies = foundMovies.filter((movie) => movie.status === 'saved' && movie);
+const SavedMovies = ({ isTablet, isLoggedIn, openSideMenu, foundMovies }) => {
+  const savedMovies = foundMovies.filter(
+    (movie) => movie.status === 'saved' && movie
+  );
 
   return (
     <>
@@ -16,7 +18,7 @@ const SavedMovies = ({ isTablet, isLoggedIn, openSideMenu, foundMovies, setMovie
       />
       <section className="saved-movies">
         <SearchForm />
-        <MoviesCardList foundMovies={savedMovies} setMovies={setMovies} />
+        <MoviesCardList foundMovies={savedMovies} />
       </section>
       <Footer />
     </>

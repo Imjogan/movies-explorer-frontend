@@ -11,11 +11,11 @@ import PageNotFound from '../PageNotFound/PageNotFound';
 import { useState, useEffect, useCallback } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { Route, Switch } from 'react-router-dom';
-import moviePicture from '../../images/movie.jpg';
 
 const App = () => {
   //определяем устройство
   const isTablet = useMediaQuery({ query: '(max-width: 768px)' });
+  const isMobile = useMediaQuery({ query: '(max-width: 480px)' });
   // состояние попапа информации и текст
   const [tooltipState, setTooltipState] = useState({
     tooltipVisible: false,
@@ -28,6 +28,12 @@ const App = () => {
   const [isSideMenu, setIsSideMenu] = useState(false);
   // стейт найденных фильмов
   const [foundMovies, setFoundMovies] = useState([]);
+  // проверяем, есть ли в хранилище сохраненные фильмы
+  useEffect(() => {
+    if (localStorage.getItem('foundedMovies')) {
+      setFoundMovies(JSON.parse(localStorage.getItem('foundedMovies') || '[]'));
+    }
+  }, []);
   // стейт состояния выполнения submit-а
   const [isSubmittingSearch, setIsSubmittingSearch] = useState(false);
   // ф-я закрытия меню
@@ -40,14 +46,12 @@ const App = () => {
     setIsSideMenu(true);
     document.addEventListener('keydown', handleEscClick);
   };
-
   // закрываем side-меню, если разрешение больше планшетного
   useEffect(() => {
     if (!isTablet) {
       setIsSideMenu(false);
     }
   }, [isTablet]);
-
   // ф-я закрытия меню по Esc
   const handleEscClick = (evt) => {
     if (evt.key === 'Escape') {
@@ -61,57 +65,6 @@ const App = () => {
     },
     [setFoundMovies]
   );
-  // временное решение
-  const [movies, setMovies] = useState([
-    {
-      name: '33 слова о дизайне',
-      image: moviePicture,
-      duration: 1234,
-      trailer: 'http://yandex.ru',
-      status: 'saved',
-      id: 0,
-    },
-    {
-      name: '33 слова о дизайне',
-      image: moviePicture,
-      duration: 1234,
-      trailer: 'http://yandex.ru',
-      status: 'unsaved',
-      id: 1,
-    },
-    {
-      name: '33 слова о дизайне',
-      image: moviePicture,
-      duration: 1234,
-      trailer: 'http://yandex.ru',
-      status: 'saved',
-      id: 2,
-    },
-    {
-      name: '33 слова о дизайне',
-      image: moviePicture,
-      duration: 1234,
-      trailer: 'http://yandex.ru',
-      status: 'unsaved',
-      id: 3,
-    },
-    {
-      name: '33 слова о дизайне',
-      image: moviePicture,
-      duration: 1234,
-      trailer: 'http://yandex.ru',
-      status: 'saved',
-      id: 4,
-    },
-    {
-      name: '33 слова о дизайне',
-      image: moviePicture,
-      duration: 1234,
-      trailer: 'http://yandex.ru',
-      status: 'unsaved',
-      id: 5,
-    },
-  ]);
 
   return (
     <section className="app">
@@ -130,13 +83,14 @@ const App = () => {
         </Route>
         <Route path="/movies">
           <Movies
+            isMobile={isMobile}
+            isTablet={isTablet}
             setFoundMovies={setFoundMovies}
             isSubmittingSearch={isSubmittingSearch}
             setIsSubmittingSearch={setIsSubmittingSearch}
             getCurrentMovies={getCurrentMovies}
             setTooltipState={setTooltipState}
             foundMovies={foundMovies}
-            setMovies={setMovies}
             isTablet={isTablet}
             isLoggedIn={isLoggedIn}
             openSideMenu={openSideMenu}
@@ -144,7 +98,8 @@ const App = () => {
         </Route>
         <Route path="/saved-movies">
           <SavedMovies
-            setMovies={setMovies}
+            isMobile={isMobile}
+            isTablet={isTablet}
             foundMovies={foundMovies}
             isTablet={isTablet}
             isLoggedIn={isLoggedIn}
@@ -168,7 +123,10 @@ const App = () => {
           <PageNotFound />
         </Route>
       </Switch>
-      <InfoTooltip setTooltipState={setTooltipState} tooltipState={tooltipState} />
+      <InfoTooltip
+        setTooltipState={setTooltipState}
+        tooltipState={tooltipState}
+      />
     </section>
   );
 };

@@ -3,7 +3,7 @@ import Button from '../Button/Button';
 import { useState } from 'react';
 import { useLocation } from 'react-router';
 
-const MoviesCard = ({ movie, setMovies, movies }) => {
+const MoviesCard = ({ movie }) => {
   const location = useLocation();
 
   const [isButtonVisible, setIsButtonVisible] = useState(false);
@@ -17,28 +17,28 @@ const MoviesCard = ({ movie, setMovies, movies }) => {
   };
 
   const handleButtonSaveClick = () => {
-    setMovies(updateState('saved'));
+    // setMovies(updateState('saved'));
   };
 
   const handleButtonSavedClick = () => {
-    setMovies(updateState('unsaved'));
+    // setMovies(updateState('unsaved'));
   };
 
   const handleButtonDeleteClick = () => {
-    setMovies(updateState('unsaved'));
+    // setMovies(updateState('unsaved'));
   };
 
-  function updateState(newStatus) {
-    return movies.map((el) => {
-      if (el.id === movie.id) {
-        return {
-          ...el,
-          status: newStatus,
-        };
-      }
-      return el;
-    });
-  }
+  // function updateState(newStatus) {
+  //   return movies.map((el) => {
+  //     if (el.id === movie.id) {
+  //       return {
+  //         ...el,
+  //         status: newStatus,
+  //       };
+  //     }
+  //     return el;
+  //   });
+  // }
 
   return (
     <section className="movies-card">

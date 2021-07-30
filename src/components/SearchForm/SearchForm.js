@@ -66,21 +66,29 @@ const SearchForm = ({
     } else {
       // очищаем массив найденных фильмов перед новым поиском
       setFoundMovies([]);
-      // активируем прелоадер
+      // активируем лоадер
       setIsSubmittingSearch(true);
       moviesApi
         .getMovies()
         .then((movies) => {
-          getCurrentMovies(
-            movies.filter((movie) =>
-              movie.nameRU.toLowerCase().includes(search.toLowerCase())
-            )
+          // удаляем фильмы из хранилища перед новым поиском
+          localStorage.removeItem('foundedMovies');
+          const foundedMovies = movies.filter((movie) =>
+            movie.nameRU.toLowerCase().includes(search.toLowerCase())
           );
+          getCurrentMovies(foundedMovies);
+          // сохраняем фильмы в хранилище
+          localStorage.setItem('foundedMovies', JSON.stringify(foundedMovies));
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          setTooltipState({
+            tooltipVisible: true,
+            isSuccessful: false,
+            text: 'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз',
+          });
         })
         .finally(() => {
+          // останавливаем лоадер
           setIsSubmittingSearch(false);
         });
     }
