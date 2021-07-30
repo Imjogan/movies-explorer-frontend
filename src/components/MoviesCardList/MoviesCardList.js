@@ -10,8 +10,15 @@ const MoviesCardList = ({
   isSubmittingSearch,
   isTablet,
   isMobile,
+  isShortChecked,
 }) => {
   const location = useLocation();
+  // проверяем, есть ли фильтрация длительности
+  const filteredMovies = foundMovies
+    ? isShortChecked
+      ? foundMovies.filter((movie) => movie.duration < 40)
+      : foundMovies
+    : [];
   // стейт параметров отображения фильмов
   const [moviesDisplayState, setMoviesDisplayState] = useState({
     moviesPerPage: 12,
@@ -41,13 +48,13 @@ const MoviesCardList = ({
       {isSubmittingSearch ? (
         <Preloader />
       ) : (
-        foundMovies.length === 0 && (
+        filteredMovies.length === 0 && (
           <p className="movies-list__not-found-items">Ничего не найдено</p>
         )
       )}
-      {foundMovies.length > 0 && (
+      {filteredMovies.length > 0 && (
         <ul className="movies-list">
-          {foundMovies
+          {filteredMovies
             ?.slice(0, moviesDisplayState.moviesPerPage)
             .map((movie) => (
               <MoviesCard key={movie.id} movie={movie} />
@@ -56,8 +63,8 @@ const MoviesCardList = ({
       )}
 
       {location.pathname === '/movies' &&
-        foundMovies.length > moviesDisplayState.countOnLoad &&
-        moviesDisplayState.moviesPerPage < foundMovies.length && (
+        filteredMovies.length > moviesDisplayState.countOnLoad &&
+        moviesDisplayState.moviesPerPage < filteredMovies.length && (
           <Button onClick={handleLoadClick} text={'Ещё'} type={'more'} />
         )}
     </>

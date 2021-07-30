@@ -14,6 +14,8 @@ const Movies = ({
   setIsSubmittingSearch,
   isSubmittingSearch,
   setFoundMovies,
+  setIsShortChecked,
+  isShortChecked,
 }) => {
   return (
     <>
@@ -24,6 +26,8 @@ const Movies = ({
         theme={'white'}
       />
       <SearchForm
+        isShortChecked={isShortChecked}
+        setIsShortChecked={setIsShortChecked}
         setFoundMovies={setFoundMovies}
         setTooltipState={setTooltipState}
         getCurrentMovies={getCurrentMovies}
@@ -31,6 +35,7 @@ const Movies = ({
       />
       <section className="movies">
         <MoviesCardList
+          isShortChecked={isShortChecked}
           isTablet={isTablet}
           isMobile={isMobile}
           isSubmittingSearch={isSubmittingSearch}

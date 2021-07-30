@@ -10,6 +10,8 @@ const SearchForm = ({
   getCurrentMovies,
   setIsSubmittingSearch,
   setFoundMovies,
+  setIsShortChecked,
+  isShortChecked,
 }) => {
   // стейт значения инпута
   const [formValue, setFormValue] = useState({
@@ -109,7 +111,10 @@ const SearchForm = ({
           />
           <Button onClick={handleSubmit} type="search" buttonType="submit" />
         </div>
-        <FilterCheckbox />
+        <FilterCheckbox
+          setIsShortChecked={setIsShortChecked}
+          isShortChecked={isShortChecked}
+        />
       </form>
     </section>
   );

@@ -16,6 +16,8 @@ const App = () => {
   //определяем устройство
   const isTablet = useMediaQuery({ query: '(max-width: 768px)' });
   const isMobile = useMediaQuery({ query: '(max-width: 480px)' });
+  // состояние чекбокса короткометражки
+  const [isShortChecked, setIsShortChecked] = useState(false);
   // состояние попапа информации и текст
   const [tooltipState, setTooltipState] = useState({
     tooltipVisible: false,
@@ -83,6 +85,8 @@ const App = () => {
         </Route>
         <Route path="/movies">
           <Movies
+            isShortChecked={isShortChecked}
+            setIsShortChecked={setIsShortChecked}
             isMobile={isMobile}
             isTablet={isTablet}
             setFoundMovies={setFoundMovies}
@@ -91,17 +95,17 @@ const App = () => {
             getCurrentMovies={getCurrentMovies}
             setTooltipState={setTooltipState}
             foundMovies={foundMovies}
-            isTablet={isTablet}
             isLoggedIn={isLoggedIn}
             openSideMenu={openSideMenu}
           />
         </Route>
         <Route path="/saved-movies">
           <SavedMovies
+            isShortChecked={isShortChecked}
+            setIsShortChecked={setIsShortChecked}
             isMobile={isMobile}
             isTablet={isTablet}
             foundMovies={foundMovies}
-            isTablet={isTablet}
             isLoggedIn={isLoggedIn}
             openSideMenu={openSideMenu}
           />
