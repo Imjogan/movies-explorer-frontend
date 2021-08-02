@@ -26,6 +26,7 @@ const Movies = ({
         theme={'white'}
       />
       <SearchForm
+        location={'non-saved'}
         isShortChecked={isShortChecked}
         setIsShortChecked={setIsShortChecked}
         setFoundMovies={setFoundMovies}

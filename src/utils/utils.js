@@ -20,6 +20,7 @@ export const validators = {
     required: (value) => value === '',
     minLength: (value) => value.length < minInputLength,
     maxLength: (value) => value.length > maxInputLength,
+    validСharacters: (value) => /[^a-zA-Zа-яёА-ЯЁ -]/u.test(value),
   },
   email: {
     required: (value) => value === '',
@@ -34,5 +35,5 @@ export const validators = {
   },
   search: {
     required: (value) => value === '',
-  }
+  },
 };

@@ -4,6 +4,8 @@ import Preloader from '../Preloader/Preloader';
 import Button from '../Button/Button';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useContext } from 'react';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 const MoviesCardList = ({
   foundMovies,
@@ -11,7 +13,9 @@ const MoviesCardList = ({
   isTablet,
   isMobile,
   isShortChecked,
+  savedMovies,
 }) => {
+  const currentUser = useContext(CurrentUserContext);
   const location = useLocation();
   // проверяем, есть ли фильтрация длительности
   const filteredMovies = foundMovies
@@ -47,18 +51,34 @@ const MoviesCardList = ({
     <>
       {isSubmittingSearch ? (
         <Preloader />
-      ) : (
+      ) : location.pathname === '/movies' ? (
         filteredMovies.length === 0 && (
           <p className="movies-list__not-found-items">Ничего не найдено</p>
         )
+      ) : (
+        savedMovies.length === 0 && (
+          <p className="movies-list__not-found-items">
+            Вы ещё ничего не сохраняли
+          </p>
+        )
       )}
-      {filteredMovies.length > 0 && (
+      {location.pathname === '/movies' && filteredMovies.length > 0 && (
         <ul className="movies-list">
           {filteredMovies
             ?.slice(0, moviesDisplayState.moviesPerPage)
             .map((movie) => (
               <MoviesCard key={movie.id} movie={movie} />
             ))}
+        </ul>
+      )}
+      {location.pathname === '/saved-movies' && savedMovies.length > 0 && (
+        <ul className="movies-list">
+          {savedMovies?.map(
+            (movie) =>
+              movie.owner === currentUser._id && (
+                <MoviesCard foundMovies={foundMovies} key={movie._id} movie={movie} />
+              )
+          )}
         </ul>
       )}
 

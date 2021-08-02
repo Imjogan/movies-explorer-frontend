@@ -10,12 +10,23 @@ import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import { useState, useEffect, useCallback } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
+import mainApi from '../../utils/MainApi';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 const App = () => {
+  // проверяем токен при обновлении
+  useEffect(() => {
+    handleTokenCheck();
+  }, []);
+  // стейт сохраненных фильмов пользователя
+  const [savedMovies, setSavedMovies] = useState([]);
+  const history = useHistory();
   //определяем устройство
   const isTablet = useMediaQuery({ query: '(max-width: 768px)' });
   const isMobile = useMediaQuery({ query: '(max-width: 480px)' });
+  // стейт пользователя
+  const [currentUser, setCurrentUser] = useState({});
   // состояние чекбокса короткометражки
   const [isShortChecked, setIsShortChecked] = useState(false);
   // состояние попапа информации и текст
@@ -25,17 +36,12 @@ const App = () => {
     text: '',
   });
   // состояние авторизации
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   // состояние side-меню
   const [isSideMenu, setIsSideMenu] = useState(false);
   // стейт найденных фильмов
   const [foundMovies, setFoundMovies] = useState([]);
-  // проверяем, есть ли в хранилище сохраненные фильмы
-  useEffect(() => {
-    if (localStorage.getItem('foundedMovies')) {
-      setFoundMovies(JSON.parse(localStorage.getItem('foundedMovies') || '[]'));
-    }
-  }, []);
+  console.log(foundMovies)
   // стейт состояния выполнения submit-а
   const [isSubmittingSearch, setIsSubmittingSearch] = useState(false);
   // ф-я закрытия меню
@@ -67,6 +73,52 @@ const App = () => {
     },
     [setFoundMovies]
   );
+  // проверка токена
+  const handleTokenCheck = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      mainApi.currentToken = token;
+      mainApi
+        .checkToken(token)
+        .then((res) => {
+          if (res) {
+            // загружаем информацию о пользователе
+            mainApi
+              .getUserInfo()
+              .then((data) => {
+                setCurrentUser(data);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            // загружаем сохраненные фильмы пользователя
+            mainApi
+              .getMovies()
+              .then((data) => {
+                console.log(data);
+                setSavedMovies(data.reverse());
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            // проверяем, есть ли в хранилище сохраненные фильмы
+            if (localStorage.getItem('foundedMovies')) {
+              setFoundMovies(
+                JSON.parse(localStorage.getItem('foundedMovies') || '[]')
+              );
+            }
+            setIsLoggedIn(true);
+            history.push('/movies');
+          }
+        })
+        .catch((res) => console.log(res));
+    }
+  };
+  // авторизация
+  const handleLogin = () => {
+    handleTokenCheck();
+    setIsLoggedIn(true);
+  };
 
   return (
     <section className="app">
@@ -75,62 +127,74 @@ const App = () => {
         isSideMenu={isSideMenu}
         closeSideMenu={closeSideMenu}
       />
-      <Switch>
-        <Route exact path="/">
-          <Main
-            isTablet={isTablet}
-            isLoggedIn={isLoggedIn}
-            openSideMenu={openSideMenu}
-          />
-        </Route>
-        <Route path="/movies">
-          <Movies
-            isShortChecked={isShortChecked}
-            setIsShortChecked={setIsShortChecked}
-            isMobile={isMobile}
-            isTablet={isTablet}
-            setFoundMovies={setFoundMovies}
-            isSubmittingSearch={isSubmittingSearch}
-            setIsSubmittingSearch={setIsSubmittingSearch}
-            getCurrentMovies={getCurrentMovies}
-            setTooltipState={setTooltipState}
-            foundMovies={foundMovies}
-            isLoggedIn={isLoggedIn}
-            openSideMenu={openSideMenu}
-          />
-        </Route>
-        <Route path="/saved-movies">
-          <SavedMovies
-            isShortChecked={isShortChecked}
-            setIsShortChecked={setIsShortChecked}
-            isMobile={isMobile}
-            isTablet={isTablet}
-            foundMovies={foundMovies}
-            isLoggedIn={isLoggedIn}
-            openSideMenu={openSideMenu}
-          />
-        </Route>
-        <Route path="/profile">
-          <Profile
-            isTablet={isTablet}
-            isLoggedIn={isLoggedIn}
-            openSideMenu={openSideMenu}
-          />
-        </Route>
-        <Route path="/signup">
-          <Register />
-        </Route>
-        <Route path="/signin">
-          <Login />
-        </Route>
-        <Route path="*">
-          <PageNotFound />
-        </Route>
-      </Switch>
       <InfoTooltip
         setTooltipState={setTooltipState}
         tooltipState={tooltipState}
       />
+      <CurrentUserContext.Provider value={currentUser}>
+        <Switch>
+          <Route exact path="/">
+            <Main
+              isTablet={isTablet}
+              isLoggedIn={isLoggedIn}
+              openSideMenu={openSideMenu}
+            />
+          </Route>
+          <Route path="/movies">
+            <Movies
+              isShortChecked={isShortChecked}
+              setIsShortChecked={setIsShortChecked}
+              isMobile={isMobile}
+              isTablet={isTablet}
+              setFoundMovies={setFoundMovies}
+              isSubmittingSearch={isSubmittingSearch}
+              setIsSubmittingSearch={setIsSubmittingSearch}
+              getCurrentMovies={getCurrentMovies}
+              setTooltipState={setTooltipState}
+              foundMovies={foundMovies}
+              isLoggedIn={isLoggedIn}
+              openSideMenu={openSideMenu}
+            />
+          </Route>
+          <Route path="/saved-movies">
+            <SavedMovies
+              savedMovies={savedMovies}
+              isShortChecked={isShortChecked}
+              setIsShortChecked={setIsShortChecked}
+              isMobile={isMobile}
+              isTablet={isTablet}
+              foundMovies={foundMovies}
+              isLoggedIn={isLoggedIn}
+              openSideMenu={openSideMenu}
+            />
+          </Route>
+          <Route path="/profile">
+            <Profile
+              setTooltipState={setTooltipState}
+              setCurrentUser={setCurrentUser}
+              setIsLoggedIn={setIsLoggedIn}
+              isTablet={isTablet}
+              isLoggedIn={isLoggedIn}
+              openSideMenu={openSideMenu}
+            />
+          </Route>
+          <Route path="/signup">
+            <Register
+              handleLogin={handleLogin}
+              setTooltipState={setTooltipState}
+            />
+          </Route>
+          <Route path="/signin">
+            <Login
+              setTooltipState={setTooltipState}
+              handleLogin={handleLogin}
+            />
+          </Route>
+          <Route path="*">
+            <PageNotFound />
+          </Route>
+        </Switch>
+      </CurrentUserContext.Provider>
     </section>
   );
 };

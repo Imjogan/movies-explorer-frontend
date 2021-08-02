@@ -12,6 +12,7 @@ const SearchForm = ({
   setFoundMovies,
   setIsShortChecked,
   isShortChecked,
+  location,
 }) => {
   // стейт значения инпута
   const [formValue, setFormValue] = useState({
@@ -66,33 +67,42 @@ const SearchForm = ({
         text: 'Нужно ввести ключевое слово',
       });
     } else {
-      // очищаем массив найденных фильмов перед новым поиском
-      setFoundMovies([]);
-      // активируем лоадер
-      setIsSubmittingSearch(true);
-      moviesApi
-        .getMovies()
-        .then((movies) => {
-          // удаляем фильмы из хранилища перед новым поиском
-          localStorage.removeItem('foundedMovies');
-          const foundedMovies = movies.filter((movie) =>
-            movie.nameRU.toLowerCase().includes(search.toLowerCase())
-          );
-          getCurrentMovies(foundedMovies);
-          // сохраняем фильмы в хранилище
-          localStorage.setItem('foundedMovies', JSON.stringify(foundedMovies));
-        })
-        .catch(() => {
-          setTooltipState({
-            tooltipVisible: true,
-            isSuccessful: false,
-            text: 'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз',
+      // проверяем, где используем поиск
+      if (location === 'saved') {
+        // что-то
+      } else {
+        // очищаем массив найденных фильмов перед новым поиском
+        setFoundMovies([]);
+        // активируем лоадер
+        setIsSubmittingSearch(true);
+        moviesApi
+          .getMovies()
+          .then((movies) => {
+            console.log(movies)
+            // удаляем фильмы из хранилища перед новым поиском
+            localStorage.removeItem('foundedMovies');
+            const foundedMovies = movies.filter((movie) =>
+              movie.nameRU.toLowerCase().includes(search.toLowerCase())
+            );
+            getCurrentMovies(foundedMovies);
+            // сохраняем фильмы в хранилище
+            localStorage.setItem(
+              'foundedMovies',
+              JSON.stringify(foundedMovies)
+            );
+          })
+          .catch(() => {
+            setTooltipState({
+              tooltipVisible: true,
+              isSuccessful: false,
+              text: 'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз',
+            });
+          })
+          .finally(() => {
+            // останавливаем лоадер
+            setIsSubmittingSearch(false);
           });
-        })
-        .finally(() => {
-          // останавливаем лоадер
-          setIsSubmittingSearch(false);
-        });
+      }
     }
   };
 

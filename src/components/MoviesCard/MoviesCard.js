@@ -2,10 +2,10 @@ import './MoviesCard.css';
 import Button from '../Button/Button';
 import { useState } from 'react';
 import { useLocation } from 'react-router';
+import mainApi from '../../utils/MainApi';
 
-const MoviesCard = ({ movie }) => {
+const MoviesCard = ({ movie, foundMovies }) => {
   const location = useLocation();
-
   const [isButtonVisible, setIsButtonVisible] = useState(false);
   // показываем кнопку при наведении на карточку, если разрешение выше планшетного
   const handleMouseOverImage = () => {
@@ -15,9 +15,28 @@ const MoviesCard = ({ movie }) => {
   const handleMouseOutImage = () => {
     setIsButtonVisible(false);
   };
-
+  // сохраняем фильм
   const handleButtonSaveClick = () => {
-    // setMovies(updateState('saved'));
+    mainApi
+      .createMovie(
+        movie.country,
+        movie.director,
+        movie.duration,
+        movie.year,
+        movie.description,
+        `https://api.nomoreparties.co${movie.image.url}`,
+        movie.trailerLink,
+        movie.nameRU,
+        movie.nameEN,
+        `https://api.nomoreparties.co${movie.image.url}`,
+        movie.id
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleButtonSavedClick = () => {
@@ -50,11 +69,15 @@ const MoviesCard = ({ movie }) => {
       >
         <img
           className="movies-card__image"
-          src={`https://api.nomoreparties.co${movie.image.url}`}
+          src={
+            movie.image.url
+              ? `https://api.nomoreparties.co${movie.image.url}`
+              : movie.image
+          }
           alt={movie.nameRU}
         />
       </a>
-      {movie.status === 'saved' ? (
+      {foundMovies?.filter((film) => film.id === movie.movieId) ? (
         location.pathname !== '/saved-movies' ? (
           <Button type={'saved'} onClick={handleButtonSavedClick} />
         ) : (

@@ -5,8 +5,9 @@ import { validateField, validators } from '../../utils/utils';
 import { minInputPasswordLength } from '../../utils/constants';
 import Logo from '../Logo/Logo';
 import { Link } from 'react-router-dom';
+import mainApi from '../../utils/MainApi';
 
-const Login = () => {
+const Login = ({ handleLogin, setTooltipState }) => {
   // стейт блокировки submit-а
   const [isDisabledDefault, setIsDisabledDefault] = useState(true);
   // стейт состояния выполнения submit-а
@@ -40,6 +41,30 @@ const Login = () => {
   // обработчик submit-а
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    setIsSubmittingLogin(true);
+    mainApi.authorize(formValues.password, formValues.email)
+      .then((data) => {
+        if (data.token) {
+          setTooltipState({
+            tooltipVisible: true,
+            isSuccessful: true,
+            text: 'Вы успешно авторизованы!',
+          });
+          localStorage.setItem('token', data.token);
+          handleLogin();
+        }
+      })
+      .catch(() =>
+        setTooltipState({
+          tooltipVisible: true,
+          isSuccessful: false,
+          text: 'При авторизации произошла ошибка, попробуйте еще раз!',
+        })
+      )
+      .finally(() => {
+        setIsDisabledDefault(true);
+        setIsSubmittingLogin(false);
+      });
   };
   // обработчик изменения инпутов
   const handleInputChange = useCallback(

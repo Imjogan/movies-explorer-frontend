@@ -5,15 +5,17 @@ import SearchForm from '../SearchForm/SearchForm';
 
 const SavedMovies = ({
   isTablet,
+  isMobile,
   isLoggedIn,
   openSideMenu,
-  foundMovies,
+  setTooltipState,
+  setIsSubmittingSearch,
+  isSubmittingSearch,
   setIsShortChecked,
   isShortChecked,
+  savedMovies,
+  foundMovies
 }) => {
-  const savedMovies = foundMovies.filter(
-    (movie) => movie.status === 'saved' && movie
-  );
 
   return (
     <>
@@ -25,12 +27,19 @@ const SavedMovies = ({
       />
       <section className="saved-movies">
         <SearchForm
+          location={'saved'}
           setIsShortChecked={setIsShortChecked}
           isShortChecked={isShortChecked}
+          setTooltipState={setTooltipState}
+          setIsSubmittingSearch={setIsSubmittingSearch}
         />
         <MoviesCardList
+          foundMovies={foundMovies}
+          savedMovies={savedMovies}
           isShortChecked={isShortChecked}
-          foundMovies={savedMovies}
+          isTablet={isTablet}
+          isMobile={isMobile}
+          isSubmittingSearch={isSubmittingSearch}
         />
       </section>
       <Footer />
