@@ -15,7 +15,8 @@ const Profile = ({
   openSideMenu,
   setIsLoggedIn,
   setCurrentUser,
-  setTooltipState
+  setTooltipState,
+  setIsLoaderVisible,
 }) => {
   const currentUser = useContext(CurrentUserContext);
   const history = useHistory();
@@ -42,6 +43,7 @@ const Profile = ({
   // обработчик submit-а
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    setIsLoaderVisible(true);
     setIsSubmittingProfile(true);
     mainApi
       .setUserInfo(formValues.name, formValues.email)
@@ -61,6 +63,7 @@ const Profile = ({
         });
       })
       .finally(() => {
+        setIsLoaderVisible(false);
         setIsDisabledDefault(true);
         setIsSubmittingProfile(false);
       });

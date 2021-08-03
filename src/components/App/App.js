@@ -1,58 +1,66 @@
 import './App.css';
+import { useState, useEffect, useCallback } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import Main from '../Main/Main';
-import Movies from '../Movies/Movies';
-import SavedMovies from '../SavedMovies/SavedMovies';
-import Profile from '../Profile/Profile';
+import mainApi from '../../utils/MainApi';
+import Preloader from '../Preloader/Preloader';
 import SideMenu from '../SideMenu/SideMenu';
 import Register from '../Register/Register';
 import Login from '../Login/Login';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import PageNotFound from '../PageNotFound/PageNotFound';
-import { useState, useEffect, useCallback } from 'react';
-import { useMediaQuery } from 'react-responsive';
-import { Route, Switch, useHistory } from 'react-router-dom';
-import mainApi from '../../utils/MainApi';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import Movies from '../Movies/Movies';
+import SavedMovies from '../SavedMovies/SavedMovies';
+import Profile from '../Profile/Profile';
 
 const App = () => {
+  const history = useHistory();
   // проверяем токен при обновлении
   useEffect(() => {
     handleTokenCheck();
   }, []);
-  // стейт сохраненных фильмов пользователя
-  const [savedMovies, setSavedMovies] = useState([]);
-  const history = useHistory();
   //определяем устройство
   const isTablet = useMediaQuery({ query: '(max-width: 768px)' });
   const isMobile = useMediaQuery({ query: '(max-width: 480px)' });
+  // стейт сохраненных фильмов пользователя
+  const [savedMovies, setSavedMovies] = useState([]);
   // стейт пользователя
   const [currentUser, setCurrentUser] = useState({});
-  // состояние чекбокса короткометражки
-  const [isShortChecked, setIsShortChecked] = useState(false);
   // состояние попапа информации и текст
   const [tooltipState, setTooltipState] = useState({
     tooltipVisible: false,
     isSuccessful: false,
     text: '',
   });
+  // стейт найденных фильмов
+  const [foundMovies, setFoundMovies] = useState([]);
+  // состояние лоадера
+  const [isLoaderVisible, setIsLoaderVisible] = useState(false);
+  // состояние чекбокса короткометражки
+  const [isShortChecked, setIsShortChecked] = useState(false);
   // состояние авторизации
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   // состояние side-меню
   const [isSideMenu, setIsSideMenu] = useState(false);
-  // стейт найденных фильмов
-  const [foundMovies, setFoundMovies] = useState([]);
-  console.log(foundMovies)
-  // стейт состояния выполнения submit-а
-  const [isSubmittingSearch, setIsSubmittingSearch] = useState(false);
+
   // ф-я закрытия меню
   const closeSideMenu = () => {
     setIsSideMenu(false);
     document.removeEventListener('keydown', handleEscClick);
   };
-  // ф-я открытия меню
+  // ф-я открытия side-меню
   const openSideMenu = () => {
     setIsSideMenu(true);
     document.addEventListener('keydown', handleEscClick);
+  };
+  // ф-я закрытия side-меню по Esc
+  const handleEscClick = (evt) => {
+    if (evt.key === 'Escape') {
+      closeSideMenu();
+    }
   };
   // закрываем side-меню, если разрешение больше планшетного
   useEffect(() => {
@@ -60,12 +68,7 @@ const App = () => {
       setIsSideMenu(false);
     }
   }, [isTablet]);
-  // ф-я закрытия меню по Esc
-  const handleEscClick = (evt) => {
-    if (evt.key === 'Escape') {
-      closeSideMenu();
-    }
-  };
+
   // получаем фильмы
   const getCurrentMovies = useCallback(
     (movies) => {
@@ -81,34 +84,33 @@ const App = () => {
       mainApi
         .checkToken(token)
         .then((res) => {
-          if (res) {
-            // загружаем информацию о пользователе
+          if (!res.message) {
+            // загружаем информацию о пользователе и фильмах
             mainApi
-              .getUserInfo()
+              .getInitialData()
               .then((data) => {
-                setCurrentUser(data);
+                setIsLoaderVisible(true);
+                const [movies, userInfo] = data;
+                setSavedMovies(movies.reverse());
+                setCurrentUser(userInfo);
               })
-              .catch((error) => {
-                console.log(error);
-              });
-            // загружаем сохраненные фильмы пользователя
-            mainApi
-              .getMovies()
-              .then((data) => {
-                console.log(data);
-                setSavedMovies(data.reverse());
+              .catch(() => {
+                setTooltipState({
+                  tooltipVisible: true,
+                  isSuccessful: false,
+                  text: 'Произошла ошибка при загрузке данных. Повторите попытку позже',
+                });
               })
-              .catch((err) => {
-                console.log(err);
+              .finally(() => {
+                setIsLoaderVisible(false);
               });
-            // проверяем, есть ли в хранилище сохраненные фильмы
+            // проверяем, есть ли в хранилище фильмы
             if (localStorage.getItem('foundedMovies')) {
               setFoundMovies(
                 JSON.parse(localStorage.getItem('foundedMovies') || '[]')
               );
             }
             setIsLoggedIn(true);
-            history.push('/movies');
           }
         })
         .catch((res) => console.log(res));
@@ -118,18 +120,20 @@ const App = () => {
   const handleLogin = () => {
     handleTokenCheck();
     setIsLoggedIn(true);
+    history.push('/movies');
   };
 
   return (
     <section className="app">
+      <Preloader isLoaderVisible={isLoaderVisible} />
       <SideMenu
         isLoggedIn={isLoggedIn}
         isSideMenu={isSideMenu}
         closeSideMenu={closeSideMenu}
       />
       <InfoTooltip
-        setTooltipState={setTooltipState}
         tooltipState={tooltipState}
+        setTooltipState={setTooltipState}
       />
       <CurrentUserContext.Provider value={currentUser}>
         <Switch>
@@ -140,55 +144,72 @@ const App = () => {
               openSideMenu={openSideMenu}
             />
           </Route>
-          <Route path="/movies">
-            <Movies
-              isShortChecked={isShortChecked}
-              setIsShortChecked={setIsShortChecked}
-              isMobile={isMobile}
-              isTablet={isTablet}
-              setFoundMovies={setFoundMovies}
-              isSubmittingSearch={isSubmittingSearch}
-              setIsSubmittingSearch={setIsSubmittingSearch}
-              getCurrentMovies={getCurrentMovies}
-              setTooltipState={setTooltipState}
-              foundMovies={foundMovies}
-              isLoggedIn={isLoggedIn}
-              openSideMenu={openSideMenu}
-            />
-          </Route>
-          <Route path="/saved-movies">
-            <SavedMovies
-              savedMovies={savedMovies}
-              isShortChecked={isShortChecked}
-              setIsShortChecked={setIsShortChecked}
-              isMobile={isMobile}
-              isTablet={isTablet}
-              foundMovies={foundMovies}
-              isLoggedIn={isLoggedIn}
-              openSideMenu={openSideMenu}
-            />
-          </Route>
-          <Route path="/profile">
-            <Profile
-              setTooltipState={setTooltipState}
-              setCurrentUser={setCurrentUser}
-              setIsLoggedIn={setIsLoggedIn}
-              isTablet={isTablet}
-              isLoggedIn={isLoggedIn}
-              openSideMenu={openSideMenu}
-            />
-          </Route>
+          <ProtectedRoute
+            path="/movies"
+            component={Movies}
+            isMobile={isMobile}
+            isTablet={isTablet}
+            isLoggedIn={isLoggedIn}
+            isLoaderVisible={isLoaderVisible}
+            isShortChecked={isShortChecked}
+            openSideMenu={openSideMenu}
+            setTooltipState={setTooltipState}
+            setIsLoaderVisible={setIsLoaderVisible}
+            setIsShortChecked={setIsShortChecked}
+            savedMovies={savedMovies}
+            foundMovies={foundMovies}
+            setSavedMovies={setSavedMovies}
+            setFoundMovies={setFoundMovies}
+            getCurrentMovies={getCurrentMovies}
+          />
+          <ProtectedRoute
+            path="/saved-movies"
+            component={SavedMovies}
+            isMobile={isMobile}
+            isTablet={isTablet}
+            isLoggedIn={isLoggedIn}
+            isLoaderVisible={isLoaderVisible}
+            isShortChecked={isShortChecked}
+            openSideMenu={openSideMenu}
+            setTooltipState={setTooltipState}
+            setIsLoaderVisible={setIsLoaderVisible}
+            setIsShortChecked={setIsShortChecked}
+            savedMovies={savedMovies}
+            foundMovies={foundMovies}
+            setSavedMovies={setSavedMovies}
+          />
+          <ProtectedRoute
+            path="/profile"
+            component={Profile}
+            isTablet={isTablet}
+            isLoggedIn={isLoggedIn}
+            setIsLoggedIn={setIsLoggedIn}
+            openSideMenu={openSideMenu}
+            setIsLoaderVisible={setIsLoaderVisible}
+            setTooltipState={setTooltipState}
+            setCurrentUser={setCurrentUser}
+          />
           <Route path="/signup">
-            <Register
-              handleLogin={handleLogin}
-              setTooltipState={setTooltipState}
-            />
+            {isLoggedIn ? (
+              <Redirect to="/movies" />
+            ) : (
+              <Register
+                setIsLoaderVisible={setIsLoaderVisible}
+                setTooltipState={setTooltipState}
+                handleLogin={handleLogin}
+              />
+            )}
           </Route>
           <Route path="/signin">
-            <Login
-              setTooltipState={setTooltipState}
-              handleLogin={handleLogin}
-            />
+            {isLoggedIn ? (
+              <Redirect to="/movies" />
+            ) : (
+              <Login
+                setIsLoaderVisible={setIsLoaderVisible}
+                setTooltipState={setTooltipState}
+                handleLogin={handleLogin}
+              />
+            )}
           </Route>
           <Route path="*">
             <PageNotFound />

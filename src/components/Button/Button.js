@@ -32,7 +32,7 @@ const Button = ({
       ${type === 'saved' && 'button_type_saved'}
       ${type === 'delete' && `button_type_delete ${additionalClass}`}
       ${type === 'more' && 'button_type_more'}
-      ${type === 'search' && 'button_type_search'}
+      ${type === 'search' && `button_type_search ${additionalClass}`}
       ${type === 'edit' && `button_type_edit ${additionalClass}`}
       ${type === 'logout' && 'button_type_logout'}
       ${type === 'register' && `button_type_register ${additionalClass}`}

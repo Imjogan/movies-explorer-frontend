@@ -1,28 +1,45 @@
 import './MoviesCardList.css';
-import MoviesCard from '../MoviesCard/MoviesCard';
-import Preloader from '../Preloader/Preloader';
-import Button from '../Button/Button';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useContext } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import MoviesCard from '../MoviesCard/MoviesCard';
+import Button from '../Button/Button';
 
 const MoviesCardList = ({
   foundMovies,
-  isSubmittingSearch,
   isTablet,
   isMobile,
   isShortChecked,
   savedMovies,
+  isLoaderVisible,
+  setSavedMovies,
+  searchBySavedMovies,
+  setIsLoaderVisible,
 }) => {
-  const currentUser = useContext(CurrentUserContext);
   const location = useLocation();
-  // проверяем, есть ли фильтрация длительности
-  const filteredMovies = foundMovies
-    ? isShortChecked
-      ? foundMovies.filter((movie) => movie.duration < 40)
-      : foundMovies
-    : [];
+  const currentUser = useContext(CurrentUserContext);
+  // показываем фильмы в зависимости от активности фильтра длительности
+  const displayedMovies = isShortChecked
+    ? foundMovies.filter((movie) => movie.duration < 40)
+    : foundMovies;
+  // сохраненные фильмы текущего пользователя
+  const savedMoviesOfCurrentUser = savedMovies.filter(
+    (movie) => movie.owner === currentUser._id
+  );
+  // показываем сохраненные фильмы в зависимости от активности фильтра длительности
+  const displayedSavedMovies = isShortChecked
+    ? savedMoviesOfCurrentUser.filter((movie) => movie.duration < 40)
+    : savedMoviesOfCurrentUser;
+  // показываем сохраненные фильмы при поиске
+  const displayedSavedMoviesWithSearch =
+    searchBySavedMovies !== ''
+      ? displayedSavedMovies.filter((movie) =>
+          movie.nameRU
+            .toLowerCase()
+            .includes(searchBySavedMovies?.toLowerCase())
+        )
+      : displayedSavedMovies;
   // стейт параметров отображения фильмов
   const [moviesDisplayState, setMoviesDisplayState] = useState({
     moviesPerPage: 12,
@@ -38,7 +55,7 @@ const MoviesCardList = ({
       setMoviesDisplayState({ moviesPerPage: 12, countOnLoad: 3 });
     }
   }, [isTablet, isMobile]);
-  // обработчик кнопки "ещё"
+  // обработчик кнопки "Ещё"
   const handleLoadClick = () => {
     setMoviesDisplayState((prevState) => ({
       ...prevState,
@@ -49,42 +66,55 @@ const MoviesCardList = ({
 
   return (
     <>
-      {isSubmittingSearch ? (
-        <Preloader />
-      ) : location.pathname === '/movies' ? (
-        filteredMovies.length === 0 && (
+      {/* показываем фразу "Ничего не найдено" на странице movies */}
+      {!isLoaderVisible &&
+        location.pathname === '/movies' &&
+        displayedMovies.length === 0 && (
           <p className="movies-list__not-found-items">Ничего не найдено</p>
-        )
-      ) : (
-        savedMovies.length === 0 && (
+        )}
+      {/* показываем фразу "Вы ещё ничего не сохраняли" на странице saved-movies */}
+      {!isLoaderVisible &&
+        location.pathname === '/saved-movies' &&
+        displayedSavedMoviesWithSearch.length === 0 && (
           <p className="movies-list__not-found-items">
             Вы ещё ничего не сохраняли
           </p>
-        )
-      )}
-      {location.pathname === '/movies' && filteredMovies.length > 0 && (
+        )}
+      {/* показываем фильмы на странице movies */}
+      {location.pathname === '/movies' && displayedMovies.length > 0 && (
         <ul className="movies-list">
-          {filteredMovies
+          {displayedMovies
             ?.slice(0, moviesDisplayState.moviesPerPage)
             .map((movie) => (
-              <MoviesCard key={movie.id} movie={movie} />
+              <MoviesCard
+                numberOfCards={displayedMovies.length}
+                savedMovies={savedMovies}
+                setSavedMovies={setSavedMovies}
+                key={movie.id}
+                movie={movie}
+                setIsLoaderVisible={setIsLoaderVisible}
+              />
             ))}
         </ul>
       )}
+      {/* показываем фильмы на странице saved-movies */}
       {location.pathname === '/saved-movies' && savedMovies.length > 0 && (
         <ul className="movies-list">
-          {savedMovies?.map(
-            (movie) =>
-              movie.owner === currentUser._id && (
-                <MoviesCard foundMovies={foundMovies} key={movie._id} movie={movie} />
-              )
-          )}
+          {displayedSavedMoviesWithSearch?.map((savedMovie) => (
+            <MoviesCard
+              numberOfCards={displayedSavedMoviesWithSearch.length}
+              setSavedMovies={setSavedMovies}
+              key={savedMovie._id}
+              movie={savedMovie}
+              setIsLoaderVisible={setIsLoaderVisible}
+            />
+          ))}
         </ul>
       )}
-
+      {/* показываем кнопку "Ещё" на странице movies */}
       {location.pathname === '/movies' &&
-        filteredMovies.length > moviesDisplayState.countOnLoad &&
-        moviesDisplayState.moviesPerPage < filteredMovies.length && (
+        displayedMovies.length > moviesDisplayState.countOnLoad &&
+        moviesDisplayState.moviesPerPage < displayedMovies.length && (
           <Button onClick={handleLoadClick} text={'Ещё'} type={'more'} />
         )}
     </>

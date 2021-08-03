@@ -8,11 +8,12 @@ import moviesApi from '../../utils/MoviesApi';
 const SearchForm = ({
   setTooltipState,
   getCurrentMovies,
-  setIsSubmittingSearch,
   setFoundMovies,
   setIsShortChecked,
   isShortChecked,
   location,
+  setIsLoaderVisible,
+  getSearchBySavedMovies,
 }) => {
   // стейт значения инпута
   const [formValue, setFormValue] = useState({
@@ -54,6 +55,10 @@ const SearchForm = ({
   );
   // вытаскиваем значение инпута
   const { search } = formValue;
+  // если поисковая строка пустая - показываем все сохраненные фильмы
+  useEffect(() => {
+    location === 'saved' && search === '' && getSearchBySavedMovies(search);
+  }, [search, location, getSearchBySavedMovies]);
   // проверяем валидность инпута
   const isSearchInvalid = Object.values(errors.search).some(Boolean);
 
@@ -69,16 +74,15 @@ const SearchForm = ({
     } else {
       // проверяем, где используем поиск
       if (location === 'saved') {
-        // что-то
+        getSearchBySavedMovies(search);
       } else {
         // очищаем массив найденных фильмов перед новым поиском
         setFoundMovies([]);
         // активируем лоадер
-        setIsSubmittingSearch(true);
+        setIsLoaderVisible(true);
         moviesApi
           .getMovies()
           .then((movies) => {
-            console.log(movies)
             // удаляем фильмы из хранилища перед новым поиском
             localStorage.removeItem('foundedMovies');
             const foundedMovies = movies.filter((movie) =>
@@ -100,7 +104,7 @@ const SearchForm = ({
           })
           .finally(() => {
             // останавливаем лоадер
-            setIsSubmittingSearch(false);
+            setIsLoaderVisible(false);
           });
       }
     }
@@ -119,7 +123,12 @@ const SearchForm = ({
             value={search}
             onChange={handleInputChange}
           />
-          <Button onClick={handleSubmit} type="search" buttonType="submit" />
+          <Button
+            additionalClass={isSearchInvalid && 'button_disabled'}
+            onClick={handleSubmit}
+            type="search"
+            buttonType="submit"
+          />
         </div>
         <FilterCheckbox
           setIsShortChecked={setIsShortChecked}

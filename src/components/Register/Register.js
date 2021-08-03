@@ -11,7 +11,7 @@ import {
 import Logo from '../Logo/Logo';
 import { Link } from 'react-router-dom';
 
-const Register = ({ setTooltipState, handleLogin }) => {
+const Register = ({ setTooltipState, handleLogin, setIsLoaderVisible }) => {
   // стейт блокировки submit-а
   const [isDisabledDefault, setIsDisabledDefault] = useState(true);
   // стейт состояния выполнения submit-а
@@ -53,6 +53,7 @@ const Register = ({ setTooltipState, handleLogin }) => {
   // обработчик submit-а
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    setIsLoaderVisible(true);
     setIsSubmittingRegister(true);
     mainApi
       .register(formValues.name, formValues.email, formValues.password)
@@ -92,6 +93,7 @@ const Register = ({ setTooltipState, handleLogin }) => {
       })
       .finally(() => {
         setIsDisabledDefault(true);
+        setIsLoaderVisible(false);
         setIsSubmittingRegister(false);
       });
   };

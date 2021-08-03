@@ -45,6 +45,20 @@
   justify-content: center;
   margin: auto;
   padding: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  background-color: #fafafa;
+  opacity: .6;
+  visibility: hidden;
+  transition: visibility .3s ease-in-out;
+}
+
+.preloader_visible {
+  visibility: visible;
 }
 
 .preloader__container {

@@ -2,6 +2,7 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import SearchForm from '../SearchForm/SearchForm';
+import { useState } from 'react';
 
 const SavedMovies = ({
   isTablet,
@@ -14,8 +15,15 @@ const SavedMovies = ({
   setIsShortChecked,
   isShortChecked,
   savedMovies,
-  foundMovies
+  foundMovies,
+  setSavedMovies,
+  setIsLoaderVisible,
 }) => {
+  const [searchBySavedMovies, setSearchBySavedMovies] = useState('');
+  // получаем поисковую фразу
+  const getSearchBySavedMovies = (text) => {
+    setSearchBySavedMovies(text);
+  };
 
   return (
     <>
@@ -27,6 +35,7 @@ const SavedMovies = ({
       />
       <section className="saved-movies">
         <SearchForm
+          getSearchBySavedMovies={getSearchBySavedMovies}
           location={'saved'}
           setIsShortChecked={setIsShortChecked}
           isShortChecked={isShortChecked}
@@ -34,6 +43,9 @@ const SavedMovies = ({
           setIsSubmittingSearch={setIsSubmittingSearch}
         />
         <MoviesCardList
+          setIsLoaderVisible={setIsLoaderVisible}
+          searchBySavedMovies={searchBySavedMovies}
+          setSavedMovies={setSavedMovies}
           foundMovies={foundMovies}
           savedMovies={savedMovies}
           isShortChecked={isShortChecked}

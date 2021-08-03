@@ -70,6 +70,27 @@ class MainApi {
     });
   }
 
+  // получаем информацию о карточках
+  getMovies() {
+    return fetch(`${this._baseUrl}/movies`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.#currentToken}`,
+      },
+      credentials: 'include',
+    }).then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    });
+  }
+
+  getInitialData() {
+    return Promise.all([this.getMovies(), this.getUserInfo()]);
+  }
+
   // отправляем информацию о пользователе
   setUserInfo(name, email) {
     return fetch(`${this._baseUrl}/users/me`, {
@@ -133,10 +154,10 @@ class MainApi {
     });
   }
 
-  // получаем информацию о карточках
-  getMovies() {
-    return fetch(`${this._baseUrl}/movies`, {
-      method: 'GET',
+  // удаляем фильм
+  deleteMovie(movieId) {
+    return fetch(`${this._baseUrl}/movies/${movieId}`, {
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${this.#currentToken}`,

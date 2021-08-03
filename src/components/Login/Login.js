@@ -7,7 +7,7 @@ import Logo from '../Logo/Logo';
 import { Link } from 'react-router-dom';
 import mainApi from '../../utils/MainApi';
 
-const Login = ({ handleLogin, setTooltipState }) => {
+const Login = ({ handleLogin, setTooltipState, setIsLoaderVisible }) => {
   // стейт блокировки submit-а
   const [isDisabledDefault, setIsDisabledDefault] = useState(true);
   // стейт состояния выполнения submit-а
@@ -41,10 +41,18 @@ const Login = ({ handleLogin, setTooltipState }) => {
   // обработчик submit-а
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    setIsLoaderVisible(true);
     setIsSubmittingLogin(true);
-    mainApi.authorize(formValues.password, formValues.email)
+    mainApi
+      .authorize(formValues.password, formValues.email)
       .then((data) => {
-        if (data.token) {
+        if (data.message) {
+          setTooltipState({
+            tooltipVisible: true,
+            isSuccessful: false,
+            text: 'Неправильная почта или пароль',
+          });
+        } else if (data.token) {
           setTooltipState({
             tooltipVisible: true,
             isSuccessful: true,
@@ -63,6 +71,7 @@ const Login = ({ handleLogin, setTooltipState }) => {
       )
       .finally(() => {
         setIsDisabledDefault(true);
+        setIsLoaderVisible(false);
         setIsSubmittingLogin(false);
       });
   };

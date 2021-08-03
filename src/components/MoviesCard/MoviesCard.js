@@ -3,9 +3,19 @@ import Button from '../Button/Button';
 import { useState } from 'react';
 import { useLocation } from 'react-router';
 import mainApi from '../../utils/MainApi';
+import { useContext } from 'react';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-const MoviesCard = ({ movie, foundMovies }) => {
+const MoviesCard = ({
+  movie,
+  setSavedMovies,
+  savedMovies,
+  numberOfCards,
+  setIsLoaderVisible,
+}) => {
   const location = useLocation();
+  const currentUser = useContext(CurrentUserContext);
+  // стейт состояния кнопки на карточке при разных разрешениях
   const [isButtonVisible, setIsButtonVisible] = useState(false);
   // показываем кнопку при наведении на карточку, если разрешение выше планшетного
   const handleMouseOverImage = () => {
@@ -17,6 +27,7 @@ const MoviesCard = ({ movie, foundMovies }) => {
   };
   // сохраняем фильм
   const handleButtonSaveClick = () => {
+    setIsLoaderVisible(true);
     mainApi
       .createMovie(
         movie.country,
@@ -32,35 +43,54 @@ const MoviesCard = ({ movie, foundMovies }) => {
         movie.id
       )
       .then((res) => {
-        console.log(res);
+        setSavedMovies([res, ...savedMovies]);
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setIsLoaderVisible(false);
+      });
+  };
+  // удаляем фильм со страницы фильмов
+  const handleButtonSavedClick = () => {
+    setIsLoaderVisible(true);
+    mainApi
+      .deleteMovie(savedMovies?.find((item) => item.movieId === movie.id)._id)
+      .then(() => {
+        setSavedMovies((oldMovies) =>
+          oldMovies.filter((oldMovie) => oldMovie.movieId !== movie.id)
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsLoaderVisible(false);
+      });
+  };
+  // удаляем фильм со страницы сохраненных фильмов
+  const handleButtonDeleteClick = () => {
+    setIsLoaderVisible(true);
+    mainApi
+      .deleteMovie(movie._id)
+      .then(() => {
+        setSavedMovies((oldMovies) =>
+          oldMovies.filter((oldMovie) => oldMovie._id !== movie._id)
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsLoaderVisible(false);
       });
   };
 
-  const handleButtonSavedClick = () => {
-    // setMovies(updateState('unsaved'));
-  };
-
-  const handleButtonDeleteClick = () => {
-    // setMovies(updateState('unsaved'));
-  };
-
-  // function updateState(newStatus) {
-  //   return movies.map((el) => {
-  //     if (el.id === movie.id) {
-  //       return {
-  //         ...el,
-  //         status: newStatus,
-  //       };
-  //     }
-  //     return el;
-  //   });
-  // }
-
   return (
-    <section className="movies-card">
+    <section
+      className={`movies-card ${numberOfCards === 1 && 'movies-card_once'}`}
+    >
       <a
         onMouseOut={handleMouseOutImage}
         onMouseOver={handleMouseOverImage}
@@ -77,16 +107,19 @@ const MoviesCard = ({ movie, foundMovies }) => {
           alt={movie.nameRU}
         />
       </a>
-      {foundMovies?.filter((film) => film.id === movie.movieId) ? (
-        location.pathname !== '/saved-movies' ? (
-          <Button type={'saved'} onClick={handleButtonSavedClick} />
-        ) : (
-          <Button
-            additionalClass={isButtonVisible && 'button_visible'}
-            type={'delete'}
-            onClick={handleButtonDeleteClick}
-          />
-        )
+      {((savedMovies?.find(
+        (item) => item.movieId === movie.id && item.owner === currentUser._id
+      ) &&
+        true) ||
+        false) &&
+      location.pathname === '/movies' ? (
+        <Button type={'saved'} onClick={handleButtonSavedClick} />
+      ) : location.pathname === '/saved-movies' ? (
+        <Button
+          additionalClass={isButtonVisible && 'button_visible'}
+          type={'delete'}
+          onClick={handleButtonDeleteClick}
+        />
       ) : (
         <Button
           additionalClass={isButtonVisible && 'button_visible'}
