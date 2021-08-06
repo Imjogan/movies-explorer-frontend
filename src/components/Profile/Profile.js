@@ -130,6 +130,7 @@ const Profile = ({
     setIsLoggedIn(false);
     localStorage.removeItem('token');
     localStorage.removeItem('loggedIn');
+    localStorage.removeItem('foundedMovies');
     mainApi.currentToken = '';
     history.push('/');
   };
@@ -225,11 +226,7 @@ const Profile = ({
             buttonType="submit"
           />
         </form>
-        <Button
-          onClick={onSignOut}
-          text={'Выйти из аккаунта'}
-          type={'logout'}
-        />
+        <Button onClick={onSignOut} text={'Выйти из аккаунта'} type={'logout'} />
       </section>
     </>
   );

@@ -10,7 +10,6 @@ const Movies = ({
   openSideMenu,
   foundMovies,
   setTooltipState,
-  getCurrentMovies,
   setFoundMovies,
   setIsShortChecked,
   isShortChecked,
@@ -18,6 +17,8 @@ const Movies = ({
   isLoaderVisible,
   setSavedMovies,
   savedMovies,
+  movies,
+  setMovies,
 }) => {
   return (
     <>
@@ -28,13 +29,14 @@ const Movies = ({
         theme={'white'}
       />
       <SearchForm
+        movies={movies}
+        setMovies={setMovies}
         setIsLoaderVisible={setIsLoaderVisible}
         location={'non-saved'}
         isShortChecked={isShortChecked}
         setIsShortChecked={setIsShortChecked}
         setFoundMovies={setFoundMovies}
         setTooltipState={setTooltipState}
-        getCurrentMovies={getCurrentMovies}
       />
       <section className="movies">
         <MoviesCardList
