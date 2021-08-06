@@ -18,17 +18,39 @@ const Profile = ({
   setTooltipState,
   setIsLoaderVisible,
 }) => {
-  const currentUser = useContext(CurrentUserContext);
   const history = useHistory();
+  const currentUser = useContext(CurrentUserContext);
   // стейт блокировки submit-а
   const [isDisabledDefault, setIsDisabledDefault] = useState(true);
   // стейт состояния выполнения submit-а
   const [isSubmittingProfile, setIsSubmittingProfile] = useState(false);
   // стейт значений инпутов
   const [formValues, setFormValues] = useState({
-    name: currentUser?.name,
-    email: currentUser?.email,
+    name: '',
+    email: '',
   });
+
+  useEffect(() => {
+    if (currentUser.name !== undefined && currentUser.email !== undefined) {
+      setFormValues({
+        name: currentUser.name,
+        email: currentUser.email,
+      });
+    }
+  }, [currentUser]);
+  // стейт показывает, новые ли данные введены в поля
+  const [isNewData, setIsNewData] = useState(false);
+  // если данные старие - блокируем submit
+  useEffect(() => {
+    if (
+      formValues.name === currentUser?.name &&
+      formValues.email === currentUser?.email
+    ) {
+      setIsNewData(false);
+    } else {
+      setIsNewData(true);
+    }
+  }, [formValues, currentUser]);
   // состояние ошибок в инпутах
   const [errors, setErrors] = useState({
     name: {
@@ -101,12 +123,13 @@ const Profile = ({
   const isAnyParamsEmailValid = errors.email.required || errors.email.email;
 
   const isDisabled =
-    isDisabledDefault || isSubmitDisabled || isSubmittingProfile;
+    isDisabledDefault || isSubmitDisabled || isSubmittingProfile || !isNewData;
 
   // выход из аккаунта
   const onSignOut = () => {
     setIsLoggedIn(false);
     localStorage.removeItem('token');
+    localStorage.removeItem('loggedIn');
     mainApi.currentToken = '';
     history.push('/');
   };

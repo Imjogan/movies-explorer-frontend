@@ -18,7 +18,9 @@ class MainApi {
       credentials: 'include',
       body: JSON.stringify({ name, email, password }),
     }).then((response) => {
-      return response.json();
+      if (response.ok) {
+        return response.json();
+      }
     });
   };
 
@@ -31,7 +33,11 @@ class MainApi {
       credentials: 'include',
       body: JSON.stringify({ password, email }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
       .then((data) => {
         if (data) {
           localStorage.setItem('token', data.token);
@@ -49,7 +55,11 @@ class MainApi {
       },
       credentials: 'include',
     })
-      .then((res) => res.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
       .then((data) => data);
   };
 
@@ -62,11 +72,11 @@ class MainApi {
         Authorization: `Bearer ${this.#currentToken}`,
       },
       credentials: 'include',
-    }).then((res) => {
-      if (res.ok) {
-        return res.json();
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
       }
-      return Promise.reject(`Ошибка: ${res.status}`);
+      return Promise.reject(`Ошибка: ${response.status}`);
     });
   }
 
@@ -79,16 +89,12 @@ class MainApi {
         Authorization: `Bearer ${this.#currentToken}`,
       },
       credentials: 'include',
-    }).then((res) => {
-      if (res.ok) {
-        return res.json();
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
       }
-      return Promise.reject(`Ошибка: ${res.status}`);
+      return Promise.reject(`Ошибка: ${response.status}`);
     });
-  }
-
-  getInitialData() {
-    return Promise.all([this.getMovies(), this.getUserInfo()]);
   }
 
   // отправляем информацию о пользователе
@@ -104,11 +110,11 @@ class MainApi {
         name,
         email,
       }),
-    }).then((res) => {
-      if (res.ok) {
-        return res.json();
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
       }
-      return Promise.reject(`Ошибка: ${res.status}`);
+      return Promise.reject(`Ошибка: ${response.status}`);
     });
   }
 
@@ -146,11 +152,11 @@ class MainApi {
         thumbnail,
         movieId,
       }),
-    }).then((res) => {
-      if (res.ok) {
-        return res.json();
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
       }
-      return Promise.reject(`Ошибка: ${res.status}`);
+      return Promise.reject(`Ошибка: ${response.status}`);
     });
   }
 
@@ -163,11 +169,11 @@ class MainApi {
         Authorization: `Bearer ${this.#currentToken}`,
       },
       credentials: 'include',
-    }).then((res) => {
-      if (res.ok) {
-        return res.json();
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
       }
-      return Promise.reject(`Ошибка: ${res.status}`);
+      return Promise.reject(`Ошибка: ${response.status}`);
     });
   }
 }

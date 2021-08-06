@@ -42,10 +42,11 @@ const App = () => {
   // состояние чекбокса короткометражки
   const [isShortChecked, setIsShortChecked] = useState(false);
   // состояние авторизации
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem('loggedIn') || false
+  );
   // состояние side-меню
   const [isSideMenu, setIsSideMenu] = useState(false);
-
   // ф-я закрытия меню
   const closeSideMenu = () => {
     setIsSideMenu(false);
@@ -81,18 +82,19 @@ const App = () => {
     const token = localStorage.getItem('token');
     if (token) {
       mainApi.currentToken = token;
+      // проверяем токен и получаем информацию о пользователе
       mainApi
         .checkToken(token)
         .then((res) => {
           if (!res.message) {
-            // загружаем информацию о пользователе и фильмах
+            setIsLoaderVisible(true);
+            // загружаем информацию о пользователе
+            setCurrentUser(res);
+            // получаем и загружаем информацию о фильмах
             mainApi
-              .getInitialData()
+              .getMovies()
               .then((data) => {
-                setIsLoaderVisible(true);
-                const [movies, userInfo] = data;
-                setSavedMovies(movies.reverse());
-                setCurrentUser(userInfo);
+                setSavedMovies(data.reverse());
               })
               .catch(() => {
                 setTooltipState({
@@ -120,6 +122,7 @@ const App = () => {
   const handleLogin = () => {
     handleTokenCheck();
     setIsLoggedIn(true);
+    localStorage.setItem('loggedIn', true);
     history.push('/movies');
   };
 

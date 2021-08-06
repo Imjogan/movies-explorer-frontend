@@ -5,6 +5,15 @@ import { useContext } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import Button from '../Button/Button';
+import {
+  moviesPerPageOnDesktop,
+  moviesPerPageOnTablet,
+  moviesPerPageOnMobile,
+  countOnLoadOnDesktop,
+  countOnLoadOnTablet,
+  countOnLoadOnMobile,
+  shortMovieDuration,
+} from '../../utils/constants';
 
 const MoviesCardList = ({
   foundMovies,
@@ -21,7 +30,7 @@ const MoviesCardList = ({
   const currentUser = useContext(CurrentUserContext);
   // показываем фильмы в зависимости от активности фильтра длительности
   const displayedMovies = isShortChecked
-    ? foundMovies.filter((movie) => movie.duration < 40)
+    ? foundMovies.filter((movie) => movie.duration < shortMovieDuration)
     : foundMovies;
   // сохраненные фильмы текущего пользователя
   const savedMoviesOfCurrentUser = savedMovies.filter(
@@ -29,7 +38,9 @@ const MoviesCardList = ({
   );
   // показываем сохраненные фильмы в зависимости от активности фильтра длительности
   const displayedSavedMovies = isShortChecked
-    ? savedMoviesOfCurrentUser.filter((movie) => movie.duration < 40)
+    ? savedMoviesOfCurrentUser.filter(
+        (movie) => movie.duration < shortMovieDuration
+      )
     : savedMoviesOfCurrentUser;
   // показываем сохраненные фильмы при поиске
   const displayedSavedMoviesWithSearch =
@@ -42,17 +53,26 @@ const MoviesCardList = ({
       : displayedSavedMovies;
   // стейт параметров отображения фильмов
   const [moviesDisplayState, setMoviesDisplayState] = useState({
-    moviesPerPage: 12,
-    countOnLoad: 3,
+    moviesPerPage: moviesPerPageOnDesktop,
+    countOnLoad: countOnLoadOnDesktop,
   });
   // в зависимости от разрешения изменяем стейт отображения
   useEffect(() => {
     if (isMobile) {
-      setMoviesDisplayState({ moviesPerPage: 5, countOnLoad: 2 });
+      setMoviesDisplayState({
+        moviesPerPage: moviesPerPageOnMobile,
+        countOnLoad: countOnLoadOnMobile,
+      });
     } else if (isTablet) {
-      setMoviesDisplayState({ moviesPerPage: 8, countOnLoad: 2 });
+      setMoviesDisplayState({
+        moviesPerPage: moviesPerPageOnTablet,
+        countOnLoad: countOnLoadOnTablet,
+      });
     } else {
-      setMoviesDisplayState({ moviesPerPage: 12, countOnLoad: 3 });
+      setMoviesDisplayState({
+        moviesPerPage: moviesPerPageOnDesktop,
+        countOnLoad: countOnLoadOnDesktop,
+      });
     }
   }, [isTablet, isMobile]);
   // обработчик кнопки "Ещё"
