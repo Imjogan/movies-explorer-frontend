@@ -25,18 +25,13 @@ const MoviesCardList = ({
   setSavedMovies,
   searchBySavedMovies,
   setIsLoaderVisible,
-  searchByMovies,
-  movies,
 }) => {
-
-  const test = searchByMovies && movies.filter((movie) => movie.nameRU.toLowerCase().includes(searchByMovies?.toLowerCase()));
-
   const location = useLocation();
   const currentUser = useContext(CurrentUserContext);
   // показываем фильмы в зависимости от активности фильтра длительности
   const displayedMovies = isShortChecked
-    ? test.filter((movie) => movie.duration < shortMovieDuration)
-    : test;
+    ? foundMovies.filter((movie) => movie.duration < shortMovieDuration)
+    : foundMovies;
   // сохраненные фильмы текущего пользователя
   const savedMoviesOfCurrentUser = savedMovies.filter(
     (movie) => movie.owner === currentUser._id

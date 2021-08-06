@@ -14,8 +14,6 @@ const SearchForm = ({
   location,
   setIsLoaderVisible,
   getSearchBySavedMovies,
-  getSearchByMovies,
-  setMovies
 }) => {
   // стейт значения инпута
   const [formValue, setFormValue] = useState({
@@ -76,23 +74,17 @@ const SearchForm = ({
     } else {
       // проверяем, где используем поиск
       if (location === 'saved') {
-        // передаем поисковую фразу
         getSearchBySavedMovies(search);
       } else {
         // очищаем массив найденных фильмов перед новым поиском
         setFoundMovies([]);
         // активируем лоадер
         setIsLoaderVisible(true);
-        // передаем поисковую фразу
-        getSearchByMovies(search);
         moviesApi
           .getMovies()
           .then((movies) => {
             // удаляем фильмы из хранилища перед новым поиском
             localStorage.removeItem('foundedMovies');
-
-            setMovies(movies);
-
             const foundedMovies = movies.filter((movie) =>
               movie.nameRU.toLowerCase().includes(search.toLowerCase())
             );
