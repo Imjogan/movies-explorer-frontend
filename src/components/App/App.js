@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
@@ -35,6 +35,8 @@ const App = () => {
     isSuccessful: false,
     text: '',
   });
+  // стейт всех полученных фильмов
+  const [movies, setMovies] = useState([]);
   // стейт найденных фильмов
   const [foundMovies, setFoundMovies] = useState([]);
   // состояние лоадера
@@ -69,14 +71,6 @@ const App = () => {
       setIsSideMenu(false);
     }
   }, [isTablet]);
-
-  // получаем фильмы
-  const getCurrentMovies = useCallback(
-    (movies) => {
-      setFoundMovies(movies);
-    },
-    [setFoundMovies]
-  );
   // проверка токена
   const handleTokenCheck = () => {
     const token = localStorage.getItem('token');
@@ -134,10 +128,7 @@ const App = () => {
         isSideMenu={isSideMenu}
         closeSideMenu={closeSideMenu}
       />
-      <InfoTooltip
-        tooltipState={tooltipState}
-        setTooltipState={setTooltipState}
-      />
+      <InfoTooltip tooltipState={tooltipState} setTooltipState={setTooltipState} />
       <CurrentUserContext.Provider value={currentUser}>
         <Switch>
           <Route exact path="/">
@@ -150,6 +141,8 @@ const App = () => {
           <ProtectedRoute
             path="/movies"
             component={Movies}
+            movies={movies}
+            setMovies={setMovies}
             isMobile={isMobile}
             isTablet={isTablet}
             isLoggedIn={isLoggedIn}
@@ -163,7 +156,6 @@ const App = () => {
             foundMovies={foundMovies}
             setSavedMovies={setSavedMovies}
             setFoundMovies={setFoundMovies}
-            getCurrentMovies={getCurrentMovies}
           />
           <ProtectedRoute
             path="/saved-movies"
