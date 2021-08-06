@@ -35,6 +35,9 @@ const App = () => {
     isSuccessful: false,
     text: '',
   });
+  
+  const [movies, setMovies] = useState([]);
+
   // стейт найденных фильмов
   const [foundMovies, setFoundMovies] = useState([]);
   // состояние лоадера
@@ -150,6 +153,8 @@ const App = () => {
           <ProtectedRoute
             path="/movies"
             component={Movies}
+            movies={movies}
+            setMovies={setMovies}
             isMobile={isMobile}
             isTablet={isTablet}
             isLoggedIn={isLoggedIn}

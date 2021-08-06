@@ -2,6 +2,7 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import SearchForm from '../SearchForm/SearchForm';
+import { useState } from 'react';
 
 const Movies = ({
   isTablet,
@@ -18,7 +19,15 @@ const Movies = ({
   isLoaderVisible,
   setSavedMovies,
   savedMovies,
+  setMovies,
+  movies,
 }) => {
+  const [searchByMovies, setSearchByMovies] = useState('');
+  // получаем поисковую фразу
+  const getSearchByMovies = (text) => {
+    setSearchByMovies(text);
+  };
+
   return (
     <>
       <Header
@@ -28,6 +37,8 @@ const Movies = ({
         theme={'white'}
       />
       <SearchForm
+        setMovies={setMovies}
+        getSearchByMovies={getSearchByMovies}
         setIsLoaderVisible={setIsLoaderVisible}
         location={'non-saved'}
         isShortChecked={isShortChecked}
@@ -38,6 +49,8 @@ const Movies = ({
       />
       <section className="movies">
         <MoviesCardList
+          movies={movies}
+          searchByMovies={searchByMovies}
           setIsLoaderVisible={setIsLoaderVisible}
           savedMovies={savedMovies}
           setSavedMovies={setSavedMovies}
