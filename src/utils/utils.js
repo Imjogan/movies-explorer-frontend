@@ -18,8 +18,9 @@ export const validateField = (validator, fieldName) => {
 export const validators = {
   name: {
     required: (value) => value === '',
-    minLength: (value) => value.length < minInputLength,
-    maxLength: (value) => value.length > maxInputLength,
+    minLength: (value) => value?.length < minInputLength,
+    maxLength: (value) => value?.length > maxInputLength,
+    validСharacters: (value) => /[^a-zA-Zа-яёА-ЯЁ -]/u.test(value),
   },
   email: {
     required: (value) => value === '',
@@ -30,6 +31,9 @@ export const validators = {
   },
   password: {
     required: (value) => value === '',
-    minLength: (value) => value.length < minInputPasswordLength,
+    minLength: (value) => value?.length < minInputPasswordLength,
+  },
+  search: {
+    required: (value) => value === '',
   },
 };

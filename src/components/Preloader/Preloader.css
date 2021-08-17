@@ -43,9 +43,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
-  z-index: 10;
+  margin: auto;
   padding: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  background-color: #fafafa;
+  opacity: .6;
+  visibility: hidden;
+  transition: visibility .3s ease-in-out;
+}
+
+.preloader_visible {
+  visibility: visible;
 }
 
 .preloader__container {
@@ -60,7 +73,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  background: #fff;
+  background: #fafafa;
   border-radius: 50px;
 }
 
@@ -82,6 +95,6 @@
 
 .preloader__round::before {
   z-index: 10;
-  background: #fff;
+  background: #fafafa;
   animation: preloader-inside-red 1s ease-in-out infinite;
 }

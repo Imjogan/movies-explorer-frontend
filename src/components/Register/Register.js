@@ -2,6 +2,7 @@ import './Register.css';
 import Button from '../Button/Button';
 import { useState, useEffect, useCallback } from 'react';
 import { validateField, validators } from '../../utils/utils';
+import mainApi from '../../utils/MainApi';
 import {
   minInputLength,
   minInputPasswordLength,
@@ -10,7 +11,7 @@ import {
 import Logo from '../Logo/Logo';
 import { Link } from 'react-router-dom';
 
-const Register = () => {
+const Register = ({ setTooltipState, handleLogin, setIsLoaderVisible }) => {
   // стейт блокировки submit-а
   const [isDisabledDefault, setIsDisabledDefault] = useState(true);
   // стейт состояния выполнения submit-а
@@ -38,6 +39,7 @@ const Register = () => {
       required: true,
       minLength: true,
       maxLength: true,
+      validСharacters: true,
     },
     email: {
       required: true,
@@ -51,6 +53,49 @@ const Register = () => {
   // обработчик submit-а
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    setIsLoaderVisible(true);
+    setIsSubmittingRegister(true);
+    mainApi
+      .register(formValues.name, formValues.email, formValues.password)
+      .then((res) => {
+        // если регистрация успешная - сразу авторизовываем пользователя
+        if (!res.error) {
+          mainApi
+            .authorize(formValues.password, formValues.email)
+            .then((data) => {
+              if (data.token) {
+                localStorage.setItem('token', data.token);
+                handleLogin();
+              }
+            })
+            .catch(() =>
+              setTooltipState({
+                tooltipVisible: true,
+                isSuccessful: false,
+                text: 'При авторизации произошла ошибка, попробуйте еще раз!',
+              })
+            );
+          setTooltipState({
+            tooltipVisible: true,
+            isSuccessful: true,
+            text: 'Вы успешно зарегистрированы!',
+          });
+        } else {
+          setTooltipState({
+            tooltipVisible: true,
+            isSuccessful: false,
+            text: 'При регистрации произошла ошибка, попробуйте еще раз.',
+          });
+        }
+      })
+      .catch((res) => {
+        console.log(res);
+      })
+      .finally(() => {
+        setIsDisabledDefault(true);
+        setIsLoaderVisible(false);
+        setIsSubmittingRegister(false);
+      });
   };
   // обработчик изменения инпутов
   const handleInputChange = useCallback(
@@ -88,7 +133,10 @@ const Register = () => {
   // submit доступен при выполнении всех условий
   const isSubmitDisabled = isNameInvalid || isEmailInvalid || isPasswordInvalid;
   const isAnyParamsNameValid =
-    errors.name.required || errors.name.minLength || errors.name.maxLength;
+    errors.name.required ||
+    errors.name.minLength ||
+    errors.name.maxLength ||
+    errors.name.validСharacters;
   const isAnyParamsEmailValid = errors.email.required || errors.email.email;
   const isAnyParamsPasswordValid =
     errors.password.required || errors.password.minLength;
@@ -137,6 +185,8 @@ const Register = () => {
                 {isAnyParamsNameValid
                   ? errors.name.required
                     ? 'Поле обязательно для заполнения'
+                    : errors.name.validСharacters
+                    ? 'Введены недопустимые символы'
                     : errors.name.minLength
                     ? `Введите имя не короче ${minInputLength} символов`
                     : errors.name.maxLength &&

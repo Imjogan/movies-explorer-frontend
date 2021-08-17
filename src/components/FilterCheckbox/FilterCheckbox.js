@@ -1,12 +1,11 @@
 import './FilterCheckbox.css';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
-const FilterCheckbox = () => {
-  const [isChecked, setIsChecked] = useState(false);
-
+const FilterCheckbox = ({ setIsShortChecked, isShortChecked }) => {
+  // обработчик чекбокса
   const handleCheck = useCallback(() => {
-    setIsChecked(!isChecked);
-  }, [isChecked]);
+    setIsShortChecked(!isShortChecked);
+  }, [isShortChecked, setIsShortChecked]);
 
   return (
     <section className="filter-checkbox">
@@ -14,7 +13,7 @@ const FilterCheckbox = () => {
         <input
           className="filter-checkbox__checkbox"
           type="checkbox"
-          checked={isChecked}
+          checked={isShortChecked}
           onChange={handleCheck}
         />
         <span className="filter-checkbox__round"></span>

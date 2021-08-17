@@ -1,12 +1,14 @@
 .movies-card {
   display: flex;
   flex-direction: column;
-  justify-content: stretch;
-  align-items: flex-start;
   font-size: 0;
   position: relative;
-  margin: 0;
+  margin: 0 auto;
   width: 100%;
+}
+
+.movies-card_once {
+  max-width: 360px;
 }
 
 .movies-card__image {
@@ -31,6 +33,10 @@
   font-size: 13px;
   line-height: 16px;
   margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 80%;
 }
 
 .movies-card__duration {

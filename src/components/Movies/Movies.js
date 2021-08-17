@@ -1,24 +1,57 @@
-import './Movies.css';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-import Button from '../Button/Button';
 import SearchForm from '../SearchForm/SearchForm';
 
-const Movies = ({ isTablet, isLoggedIn, openSideMenu, movies, setMovies }) => {
+const Movies = ({
+  isTablet,
+  isMobile,
+  isLoggedIn,
+  openSideMenu,
+  foundMovies,
+  setTooltipState,
+  setFoundMovies,
+  setIsShortChecked,
+  isShortChecked,
+  setIsLoaderVisible,
+  isLoaderVisible,
+  setSavedMovies,
+  savedMovies,
+  movies,
+  setMovies,
+}) => {
   return (
-    <section className="movies">
+    <>
       <Header
         isTablet={isTablet}
         isLoggedIn={isLoggedIn}
         openSideMenu={openSideMenu}
         theme={'white'}
       />
-      <SearchForm />
-      <MoviesCardList movies={movies} setMovies={setMovies} />
-      <Button text={'Ещё'} type={'more'} />
+      <SearchForm
+        movies={movies}
+        setMovies={setMovies}
+        setIsLoaderVisible={setIsLoaderVisible}
+        location={'non-saved'}
+        isShortChecked={isShortChecked}
+        setIsShortChecked={setIsShortChecked}
+        setFoundMovies={setFoundMovies}
+        setTooltipState={setTooltipState}
+      />
+      <section className="movies">
+        <MoviesCardList
+          setIsLoaderVisible={setIsLoaderVisible}
+          savedMovies={savedMovies}
+          setSavedMovies={setSavedMovies}
+          isLoaderVisible={isLoaderVisible}
+          isShortChecked={isShortChecked}
+          isTablet={isTablet}
+          isMobile={isMobile}
+          foundMovies={foundMovies}
+        />
+      </section>
       <Footer />
-    </section>
+    </>
   );
 };
 

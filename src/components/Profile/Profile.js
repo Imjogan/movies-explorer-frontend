@@ -4,8 +4,22 @@ import Button from '../Button/Button';
 import { useState, useEffect, useCallback } from 'react';
 import { validateField, validators } from '../../utils/utils';
 import { minInputLength } from '../../utils/constants';
+import mainApi from '../../utils/MainApi';
+import { useHistory } from 'react-router';
+import { useContext } from 'react';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
+const Profile = ({
+  isTablet,
+  isLoggedIn,
+  openSideMenu,
+  setIsLoggedIn,
+  setCurrentUser,
+  setTooltipState,
+  setIsLoaderVisible,
+}) => {
+  const history = useHistory();
+  const currentUser = useContext(CurrentUserContext);
   // стейт блокировки submit-а
   const [isDisabledDefault, setIsDisabledDefault] = useState(true);
   // стейт состояния выполнения submit-а
@@ -15,16 +29,28 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
     name: '',
     email: '',
   });
-  // обнуляем инпуты при обновлении компонента
+
   useEffect(() => {
-    setIsDisabledDefault(true);
-    return () => {
+    if (currentUser.name !== undefined && currentUser.email !== undefined) {
       setFormValues({
-        name: '',
-        email: '',
+        name: currentUser.name,
+        email: currentUser.email,
       });
-    };
-  }, []);
+    }
+  }, [currentUser]);
+  // стейт показывает, новые ли данные введены в поля
+  const [isNewData, setIsNewData] = useState(false);
+  // если данные старие - блокируем submit
+  useEffect(() => {
+    if (
+      formValues.name === currentUser?.name &&
+      formValues.email === currentUser?.email
+    ) {
+      setIsNewData(false);
+    } else {
+      setIsNewData(true);
+    }
+  }, [formValues, currentUser]);
   // состояние ошибок в инпутах
   const [errors, setErrors] = useState({
     name: {
@@ -39,6 +65,30 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
   // обработчик submit-а
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    setIsLoaderVisible(true);
+    setIsSubmittingProfile(true);
+    mainApi
+      .setUserInfo(formValues.name, formValues.email)
+      .then((res) => {
+        setCurrentUser(res);
+        setTooltipState({
+          tooltipVisible: true,
+          isSuccessful: true,
+          text: 'Изменения приняты!',
+        });
+      })
+      .catch(() => {
+        setTooltipState({
+          tooltipVisible: true,
+          isSuccessful: false,
+          text: 'Что-то пошло не так...',
+        });
+      })
+      .finally(() => {
+        setIsLoaderVisible(false);
+        setIsDisabledDefault(true);
+        setIsSubmittingProfile(false);
+      });
   };
   // обработчик изменения инпутов
   const handleInputChange = useCallback(
@@ -73,7 +123,17 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
   const isAnyParamsEmailValid = errors.email.required || errors.email.email;
 
   const isDisabled =
-    isDisabledDefault || isSubmitDisabled || isSubmittingProfile;
+    isDisabledDefault || isSubmitDisabled || isSubmittingProfile || !isNewData;
+
+  // выход из аккаунта
+  const onSignOut = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem('token');
+    localStorage.removeItem('loggedIn');
+    localStorage.removeItem('foundedMovies');
+    mainApi.currentToken = '';
+    history.push('/');
+  };
 
   return (
     <>
@@ -84,7 +144,7 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
         theme={'white'}
       />
       <section className="profile">
-        <h3 className="profile__greeting">{`Привет, Иван!`}</h3>
+        <h3 className="profile__greeting">{`Привет, ${currentUser?.name}!`}</h3>
         <form
           onSubmit={handleSubmit}
           noValidate
@@ -129,6 +189,7 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
               <p className="profile__input-caption">E-mail</p>
               <label className="profile__label">
                 <input
+                  disabled
                   type="email"
                   placeholder="Email"
                   className={`profile__form-input ${
@@ -165,7 +226,7 @@ const Profile = ({ isTablet, isLoggedIn, openSideMenu }) => {
             buttonType="submit"
           />
         </form>
-        <Button text={'Выйти из аккаунта'} type={'logout'} />
+        <Button onClick={onSignOut} text={'Выйти из аккаунта'} type={'logout'} />
       </section>
     </>
   );
