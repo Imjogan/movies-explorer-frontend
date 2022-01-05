@@ -5,4 +5,4 @@
 Ссылка на фронтенд: http://movies-explorer.mj.nomoredomains.rocks
 IP-адрес: 130.193.52.168
 
-Ссылка на макет: https://disk.yandex.ru/d/lZgVqyvhiEDHXQ
+Ссылка на макет: https://disk.yandex.ru/d/TXiJ8c6Nz0nXzA
